@@ -6,7 +6,7 @@ import '../src/features/auth/presentation/login_page.dart';
 class App extends ConsumerWidget {
   const App({super.key});
 
-@override
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       initialRoute: '/login',
