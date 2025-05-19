@@ -10,10 +10,11 @@ class LoginPage extends ConsumerWidget {
     final email = ref.watch(emailProvider);
     final senha = ref.watch(senhaProvider);
     final isLoading = ref.watch(isLoadingProvider);
+    final senhaVisivel = ref.watch(senhaVisivelProvider);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1F3A5F), // Azul escuro
+        backgroundColor: const Color(0xFF1F3A5F),
         centerTitle: true,
         toolbarHeight: 60,
         title: Text(
@@ -22,64 +23,118 @@ class LoginPage extends ConsumerWidget {
             fontWeight: FontWeight.normal,
           ),
         ),
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.yellow, width: 1.5),
-              color: Colors.black,
-            ),
-            child: const Center(
-              child: Text(
-                'JF',
-                style: TextStyle(
-                  color: Colors.yellow,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),
+        leading: Center(
+            child: Image.asset(
+              'logo.png',
+              fit: BoxFit.contain,
+              height: 90,
+              width: 90,
             ),
           ),
-        ),
-        elevation: 0, // Tira a sombra se quiser
+        elevation: 0,
       ),
       backgroundColor: Color(0xFF121E30),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(24),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              onChanged: (value) => ref.read(emailProvider.notifier).state = value,
-              decoration: InputDecoration(labelText: 'E-mail'),
-            ),
-            TextField(
-              onChanged: (value) => ref.read(senhaProvider.notifier).state = value,
-              decoration: InputDecoration(labelText: 'Senha'),
-              obscureText: true,
+            Text(
+              'LOGIN',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto',
+                color: Colors.white,
+              ),
             ),
             SizedBox(height: 16),
+            TextField(
+              onChanged: (value) => ref.read(emailProvider.notifier).state = value,
+              decoration: InputDecoration(
+                labelText: 'E-mail',
+                border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 24),
+            TextField(
+              onChanged: (value) => ref.read(senhaProvider.notifier).state = value,
+              decoration: InputDecoration(
+                labelText: 'Senha',
+                border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    senhaVisivel ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    ref.read(senhaVisivelProvider.notifier).state = !senhaVisivel;
+                  },
+                )
+              ),
+              obscureText: !senhaVisivel,
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Esqueci minha senha',
+                  style: TextStyle(
+                    color: Color(0xFF7C838C),
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 60),
             isLoading
                 ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () async {
-                      ref.read(isLoadingProvider.notifier).state = true;
-                      await Future.delayed(Duration(seconds: 2));
-                      ref.read(isLoadingProvider.notifier).state = false;
-
-                      // Simples validação
-                      if (email == 'a@a.com' && senha == '123') {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Login OK!')),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Login errado')),
-                        );
-                      }
-                    },
-                    child: Text('Entrar'),
+                : SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        ref.read(isLoadingProvider.notifier).state = true;
+                        await Future.delayed(Duration(seconds: 2));
+                        ref.read(isLoadingProvider.notifier).state = false;
+                  
+                        // Simples validação
+                        if (email == 'a@a.com' && senha == '123') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Login OK!')),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Login errado')),
+                          );
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all<Color>(Color(0xFFFFC107)),
+                        padding: WidgetStateProperty.all<EdgeInsets>(
+                          EdgeInsets.symmetric(vertical: 8),
+                        ),
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Enviar',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                      ),
+                    ),
                   ),
+                ),
           ],
         ),
       ),
