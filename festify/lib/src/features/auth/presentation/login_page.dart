@@ -83,11 +83,16 @@ class LoginPage extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  'Esqueci minha senha',
-                  style: TextStyle(
-                    color: Color(0xFF7C838C),
-                    fontSize: 14,
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/password-reset');
+                  },
+                  child: Text(
+                    'Esqueci minha senha',
+                    style: TextStyle(
+                      color: Color(0xFF7C838C),
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ],
@@ -99,6 +104,12 @@ class LoginPage extends ConsumerWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () async {
+                        if (email.isEmpty || senha.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Por favor, preencha todos os campos')),
+                          );
+                          return;
+                        }
                         ref.read(isLoadingProvider.notifier).state = true;
                         await Future.delayed(Duration(seconds: 2));
                         ref.read(isLoadingProvider.notifier).state = false;

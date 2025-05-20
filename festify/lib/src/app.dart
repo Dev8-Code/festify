@@ -2,6 +2,7 @@ import 'package:festify/src/features/core/providers/app_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../src/features/auth/presentation/login_page.dart';
+import '../src/features/auth/presentation/password_reset_page.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -12,6 +13,7 @@ class App extends ConsumerWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginPage(),
+        '/password-reset': (context) => const PasswordResetPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
