@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/password_reset_providers.dart';
+import '../../custom_app_bar.dart';
 
 class PasswordResetPage extends ConsumerWidget {
   const PasswordResetPage({super.key});
@@ -11,26 +12,7 @@ class PasswordResetPage extends ConsumerWidget {
     final isLoading = ref.watch(isLoadingProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1F3A5F),
-        centerTitle: true,
-        toolbarHeight: 60,
-        title: Text(
-          'Lamone',
-          style: TextStyle(
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-        leading: Center(
-            child: Image.asset(
-              'logo.png',
-              fit: BoxFit.contain,
-              height: 90,
-              width: 90,
-            ),
-          ),
-        elevation: 0,
-      ),
+      appBar: CustomAppBar(),
       backgroundColor: Color(0xFF121E30),
       body: Padding(
         padding: EdgeInsets.all(24),
