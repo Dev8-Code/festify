@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/cadastro_pagamento_providers.dart';
 import '../../custom_app_bar.dart';
+import '../../custom_bottom_nav_bar.dart';
 
 class CadastroPagamentoPage extends ConsumerWidget {
   const CadastroPagamentoPage({super.key});
@@ -33,7 +34,11 @@ class CadastroPagamentoPage extends ConsumerWidget {
             _buildCurrencyInput(ref, 'Valor contrato', valorContratoProvider),
             _buildCurrencyInput(ref, 'Valor pago', valorPagoProvider),
             _buildInput(ref, 'Qtde parcelas', qtdeParcelasProvider),
-            _buildInput(ref, 'Data vencimento (dd/mm/aaaa)', dataVencimentoProvider),
+            _buildInput(
+              ref,
+              'Data vencimento (dd/mm/aaaa)',
+              dataVencimentoProvider,
+            ),
 
             const SizedBox(height: 16),
             Container(
@@ -51,56 +56,71 @@ class CadastroPagamentoPage extends ConsumerWidget {
             const SizedBox(height: 24),
             SizedBox(
               height: 50,
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator(color: Colors.yellow))
-                  : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow[700],
-                        foregroundColor: const Color(0xFF121E30),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+              child:
+                  isLoading
+                      ? const Center(
+                        child: CircularProgressIndicator(color: Colors.yellow),
+                      )
+                      : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.yellow[700],
+                          foregroundColor: const Color(0xFF121E30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: () async {
-                        if ([valorContrato, valorPago, qtdeParcelas, dataVencimento].any((e) => e.isEmpty)) {
+                        onPressed: () async {
+                          if ([
+                            valorContrato,
+                            valorPago,
+                            qtdeParcelas,
+                            dataVencimento,
+                          ].any((e) => e.isEmpty)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Preencha todos os campos'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          ref
+                              .read(isLoadingCadastroPagamentoProvider.notifier)
+                              .state = true;
+                          await Future.delayed(const Duration(seconds: 2));
+                          ref
+                              .read(isLoadingCadastroPagamentoProvider.notifier)
+                              .state = false;
+
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Preencha todos os campos')),
+                            const SnackBar(
+                              content: Text(
+                                'Pagamento cadastrado com sucesso!',
+                              ),
+                            ),
                           );
-                          return;
-                        }
 
-                        ref.read(isLoadingCadastroPagamentoProvider.notifier).state = true;
-                        await Future.delayed(const Duration(seconds: 2));
-                        ref.read(isLoadingCadastroPagamentoProvider.notifier).state = false;
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Pagamento cadastrado com sucesso!')),
-                        );
-
-                        // Exemplo de redirecionamento após salvar
-                        // Navigator.of(context).pushReplacementNamed('/home');
-                      },
-                      child: const Text('Cadastrar'),
-                    ),
+                          // Exemplo de redirecionamento após salvar
+                          // Navigator.of(context).pushReplacementNamed('/home');
+                        },
+                        child: const Text('Cadastrar'),
+                      ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF121E30),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Cadastro'),
-          BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Contratos'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Agenda'),
-        ],
-      ),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 
-  Widget _buildInput(WidgetRef ref, String label, StateProvider<String> provider) {
+  Widget _buildInput(
+    WidgetRef ref,
+    String label,
+    StateProvider<String> provider,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
@@ -120,7 +140,11 @@ class CadastroPagamentoPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildCurrencyInput(WidgetRef ref, String label, StateProvider<String> provider) {
+  Widget _buildCurrencyInput(
+    WidgetRef ref,
+    String label,
+    StateProvider<String> provider,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/cadastro_pessoa_juridica_providers.dart';
 import '../../custom_app_bar.dart';
+import '../../custom_bottom_nav_bar.dart';
 
 class CadastroPessoaJuridicaPage extends ConsumerWidget {
   const CadastroPessoaJuridicaPage({super.key});
@@ -26,7 +27,11 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
             const Text(
               'CADASTRO PESSOA JURÍDICA',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 24),
 
@@ -41,55 +46,81 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
               child: SizedBox(
                 width: 500,
                 height: 50,
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator(color: Colors.yellow))
-                    : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow[700],
-                          foregroundColor: const Color(0xFF121E30),
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                child:
+                    isLoading
+                        ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.yellow,
                           ),
-                          textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        onPressed: () async {
-                          if ([razaoSocial, cnpj, responsavel, email, telefone].any((e) => e.isEmpty)) {
+                        )
+                        : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow[700],
+                            foregroundColor: const Color(0xFF121E30),
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          onPressed: () async {
+                            if ([
+                              razaoSocial,
+                              cnpj,
+                              responsavel,
+                              email,
+                              telefone,
+                            ].any((e) => e.isEmpty)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Por favor, preencha todos os campos',
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            ref
+                                .read(
+                                  isLoadingCadastroJuridicoProvider.notifier,
+                                )
+                                .state = true;
+                            await Future.delayed(const Duration(seconds: 2));
+                            ref
+                                .read(
+                                  isLoadingCadastroJuridicoProvider.notifier,
+                                )
+                                .state = false;
+
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Por favor, preencha todos os campos')),
+                              const SnackBar(
+                                content: Text(
+                                  'Cadastro realizado com sucesso!',
+                                ),
+                              ),
                             );
-                            return;
-                          }
-
-                          ref.read(isLoadingCadastroJuridicoProvider.notifier).state = true;
-                          await Future.delayed(const Duration(seconds: 2));
-                          ref.read(isLoadingCadastroJuridicoProvider.notifier).state = false;
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Cadastro realizado com sucesso!')),
-                          );
-                        },
-                        child: const Text('Cadastrar'),
-                      ),
+                          },
+                          child: const Text('Cadastrar'),
+                        ),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF121E30),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Cadastro PJ'),
-          BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Contratos'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Agenda'),
-        ],
-      ),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 
-  Widget _buildInput(BuildContext context, WidgetRef ref, String label, StateProvider<String> provider) {
+  Widget _buildInput(
+    BuildContext context,
+    WidgetRef ref,
+    String label,
+    StateProvider<String> provider,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(

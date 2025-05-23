@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/cadastro_evento_providers.dart';
 import '../../custom_app_bar.dart';
+import '../../custom_bottom_nav_bar.dart';
 
 class CadastroEventoPage extends ConsumerWidget {
   const CadastroEventoPage({super.key});
@@ -28,7 +29,6 @@ class CadastroEventoPage extends ConsumerWidget {
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             const SizedBox(height: 24),
-
             _buildInput(ref, 'Tipo de evento', tipoEventoProvider),
             _buildInput(ref, 'Qtde de dias para montagem/desmontagem', diasMontagemProvider),
 
@@ -106,16 +106,8 @@ class CadastroEventoPage extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF121E30),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Cadastro'),
-          BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Contratos'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Agenda'),
-        ],
-      ),
+            bottomNavigationBar: CustomBottomNavBar(),
+
     );
   }
 

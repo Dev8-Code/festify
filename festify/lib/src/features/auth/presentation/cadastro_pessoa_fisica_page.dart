@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/cadastro_pessoa_fisica_providers.dart';
 import '../../custom_app_bar.dart';
+import '../../custom_bottom_nav_bar.dart';
+
 
 class CadastroPessoaFisicaPage extends ConsumerWidget {
   const CadastroPessoaFisicaPage({super.key});
@@ -77,16 +79,7 @@ class CadastroPessoaFisicaPage extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF121E30),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.person_add), label: 'Cadastro'),
-          BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Contratos'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Agenda'),
-        ],
-      ),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 

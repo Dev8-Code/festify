@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../custom_app_bar.dart';
+import '../../custom_bottom_nav_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -20,18 +21,12 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Início'),
-            ),
+            ListTile(leading: Icon(Icons.home), title: Text('Início')),
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Configurações'),
             ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Sair'),
-            ),
+            ListTile(leading: Icon(Icons.logout), title: Text('Sair')),
           ],
         ),
       ),
@@ -42,10 +37,7 @@ class HomePage extends StatelessWidget {
           children: [
             const Text(
               'Selecione uma opção',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             const SizedBox(height: 32),
             Row(
@@ -62,7 +54,8 @@ class HomePage extends StatelessWidget {
                   context: context,
                   icon: Icons.person,
                   label: 'Cliente',
-                  onTap: () => Navigator.pushNamed(context, '/cadastro-cliente'),
+                  onTap:
+                      () => Navigator.pushNamed(context, '/cadastro-cliente'),
                 ),
               ],
             ),
@@ -70,16 +63,7 @@ class HomePage extends StatelessWidget {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF121E30),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Cadastro'),
-          BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Contratos'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Agenda'),
-        ],
-      ),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 
@@ -103,10 +87,7 @@ class HomePage extends StatelessWidget {
           children: [
             Icon(icon, color: Colors.white, size: 40),
             const SizedBox(height: 8),
-            Text(
-              label,
-              style: const TextStyle(color: Colors.white),
-            ),
+            Text(label, style: const TextStyle(color: Colors.white)),
           ],
         ),
       ),
