@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
-  const CustomBottomNavBar({
-    super.key,
-  });
+  const CustomBottomNavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,24 +15,15 @@ class CustomBottomNavBar extends StatelessWidget {
         unselectedFontSize: 14,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_add,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.person_add, color: Colors.white),
             label: 'Cadastro',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.edit_document,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.edit_document, color: Colors.white),
             label: 'Contratos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.event,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.event, color: Colors.white),
             label: 'Agenda',
           ),
         ],
