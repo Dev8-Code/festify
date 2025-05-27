@@ -97,7 +97,7 @@ class RegisterSupplierPage extends ConsumerWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFFC107),
-                  foregroundColor: Colors.black,
+                  foregroundColor: const Color(0xFF121E30),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
