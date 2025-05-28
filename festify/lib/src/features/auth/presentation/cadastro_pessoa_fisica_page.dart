@@ -4,7 +4,6 @@ import '../providers/cadastro_pessoa_fisica_providers.dart';
 import '../../custom_app_bar.dart';
 import '../../custom_bottom_nav_bar.dart';
 
-
 class CadastroPessoaFisicaPage extends ConsumerWidget {
   const CadastroPessoaFisicaPage({super.key});
 
@@ -28,7 +27,11 @@ class CadastroPessoaFisicaPage extends ConsumerWidget {
             const Text(
               'CADASTRO PESSOA FÍSICA',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 24),
 
@@ -44,36 +47,60 @@ class CadastroPessoaFisicaPage extends ConsumerWidget {
               child: SizedBox(
                 width: 500,
                 height: 50,
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator(color: Colors.yellow))
-                    : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow[700],
-                          foregroundColor: const Color(0xFF121E30),
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                child:
+                    isLoading
+                        ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.yellow,
                           ),
-                          textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        onPressed: () async {
-                          if ([nome, cpf, rg, email, telefone].any((e) => e.isEmpty)) {
+                        )
+                        : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow[700],
+                            foregroundColor: const Color(0xFF121E30),
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          onPressed: () async {
+                            if ([
+                              nome,
+                              cpf,
+                              rg,
+                              email,
+                              telefone,
+                            ].any((e) => e.isEmpty)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Por favor, preencha todos os campos',
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            ref.read(isLoadingCadastroProvider.notifier).state =
+                                true;
+                            await Future.delayed(const Duration(seconds: 2));
+                            ref.read(isLoadingCadastroProvider.notifier).state =
+                                false;
+
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Por favor, preencha todos os campos')),
+                              const SnackBar(
+                                content: Text(
+                                  'Cadastro realizado com sucesso!',
+                                ),
+                              ),
                             );
-                            return;
-                          }
-
-                          ref.read(isLoadingCadastroProvider.notifier).state = true;
-                          await Future.delayed(const Duration(seconds: 2));
-                          ref.read(isLoadingCadastroProvider.notifier).state = false;
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Cadastro realizado com sucesso!')),
-                          );
-                        },
-                        child: const Text('Cadastrar'),
-                      ),
+                          },
+                          child: const Text('Cadastrar'),
+                        ),
               ),
             ),
           ],
@@ -83,7 +110,12 @@ class CadastroPessoaFisicaPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildInput(BuildContext context, WidgetRef ref, String label, StateProvider<String> provider) {
+  Widget _buildInput(
+    BuildContext context,
+    WidgetRef ref,
+    String label,
+    StateProvider<String> provider,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
