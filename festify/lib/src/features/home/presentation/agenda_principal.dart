@@ -84,8 +84,8 @@ class AgendaPrincipalPage extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 120,
-        height: 120,
+        width: 140,
+        height: 140,
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),

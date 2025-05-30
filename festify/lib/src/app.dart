@@ -1,5 +1,6 @@
 import 'package:festify/src/features/auth/presentation/cadastro_pessoa_fisica_page.dart';
 import 'package:festify/src/features/core/providers/app_providers.dart';
+import 'package:festify/src/features/home/presentation/agenda_visualizacao.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../src/features/auth/presentation/login_page.dart';
@@ -33,7 +34,7 @@ class App extends ConsumerWidget {
         '/cadastro-pagamento': (context) => const CadastroPagamentoPage(),
         '/home-page': (context) => const HomePage(),
         '/agenda-principal': (context) => const AgendaPrincipalPage(),
-
+        '/agenda-visualizacao': (context) => const AgendaVisualizacaoPage(),
 
       },
       theme: ThemeData(
