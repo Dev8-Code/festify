@@ -17,15 +17,19 @@ dependencies:
   supabase_flutter: ^2.9.0
   flutter_dotenv: ^5.2.1
   flutter_native_splash: ^2.4.6
+  uuid: ^4.5.1
+  form_validator: ^2.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
-  riverpod_generator: ^2.6.5
   build_runner: ^2.4.15
   custom_lint: ^0.7.5
   riverpod_lint: ^2.6.5
+  flutter_lints: ^5.0.0
+  riverpod_generator: ^2.6.5
+  freezed: ^3.0.6
+  json_serializable: ^6.9.5
 
 flutter:
   uses-material-design: true

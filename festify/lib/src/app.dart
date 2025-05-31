@@ -12,7 +12,7 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      initialRoute: '/contract-details',
+      initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginPage(),
         '/password-reset': (context) => const PasswordResetPage(),
