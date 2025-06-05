@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
                   context: context,
                   icon: Icons.person,
                   label: 'Cliente',
-                  onTap: () => Navigator.pushNamed(context, '/cadastro-cliente'),
+                  onTap: () => _showClientTypeDialog(context),
                 ),
               ],
             ),
@@ -92,8 +92,8 @@ class HomePage extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 120,
-        height: 120,
+        width: 140,
+        height: 140,
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
@@ -110,6 +110,63 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showClientTypeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: const Color.fromARGB(255, 249, 199, 38),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Selecione o tipo de cliente',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                RadioListTile<String>(
+                  value: 'fisica',
+                  groupValue: null,
+                  title: const Text('PESSOA FÍSICA'),
+                  onChanged: (value) {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/cadastro-cliente-fisica');
+                  },
+                ),
+                const Divider(),
+                RadioListTile<String>(
+                  value: 'juridica',
+                  groupValue: null,
+                  title: const Text('PESSOA JURÍDICA'),
+                  onChanged: (value) {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/cadastro-cliente-juridica');
+                  },
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Fechar',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
