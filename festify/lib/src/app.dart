@@ -12,6 +12,8 @@ import 'features/home/presentation/home_page.dart';
 import 'features/payment/presentation/cadastro_evento_page.dart';
 import 'features/payment/presentation/cadastro_pagamento_page.dart';
 import 'features/auth/presentation/cadastro_pessoa_juridica_page.dart';
+import 'features/home/presentation/agenda_bloqueio.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 
 
@@ -35,8 +37,15 @@ class App extends ConsumerWidget {
         '/home-page': (context) => const HomePage(),
         '/agenda-principal': (context) => const AgendaPrincipalPage(),
         '/agenda-visualizacao': (context) => const AgendaVisualizacaoPage(),
+        '/agenda-bloqueio': (context) => const AgendaBloqueioDatasPage(),
 
       },
+      supportedLocales: const [Locale('pt', 'BR')],
+        localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: ref.watch(colorProvider),

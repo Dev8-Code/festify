@@ -17,6 +17,10 @@ dependencies:
   supabase_flutter: ^2.9.0
   flutter_dotenv: ^5.2.1
   flutter_native_splash: ^2.4.6
+  table_calendar: ^3.0.9
+  flutter_localizations:
+    sdk: flutter
+  
 
 dev_dependencies:
   flutter_test:
