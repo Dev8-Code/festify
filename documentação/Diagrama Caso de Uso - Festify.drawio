@@ -1,0 +1,127 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="27.0.9">
+  <diagram name="Página-1" id="WbsgAhVhh_YL0ereEZQi">
+    <mxGraphModel dx="1042" dy="534" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="R5aP2TDIoxsustkMiFOB-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="R5aP2TDIoxsustkMiFOB-1" target="R5aP2TDIoxsustkMiFOB-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-1" value="ADMIN" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="50" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="R5aP2TDIoxsustkMiFOB-3" target="R5aP2TDIoxsustkMiFOB-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="R5aP2TDIoxsustkMiFOB-3" target="R5aP2TDIoxsustkMiFOB-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="R5aP2TDIoxsustkMiFOB-3" target="R5aP2TDIoxsustkMiFOB-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="R5aP2TDIoxsustkMiFOB-3" target="R5aP2TDIoxsustkMiFOB-56">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-3" value="OPERADOR" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="120" y="280" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-8" value="Aplicativo Festify" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="20" width="670" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-6" value="Cadastrar clientes e fornecedores" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="50" y="101" width="130" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-7" value="Editar/excluir cadastros" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="500" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-5" value="Cadastrar operadores" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="55" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-18" value="extends" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-35" target="R5aP2TDIoxsustkMiFOB-7">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="194" y="130" as="sourcePoint" />
+            <mxPoint x="289" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-30" value="Bloquear datas na agenda" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="490" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-31" value="Gerar contratos pré-preenchidos em Word" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="50" y="350" width="135" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-32" value="Fazer upload de contrato assinado ou disponível para assinar" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="55" y="420" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-35" value="Visualizar cadastros" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="275" y="106" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-36" value="Visualizar eventos e pagamentos" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="275" y="180" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-43" value="Baixar contrato em Word para edição" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="270" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-44" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-6" target="R5aP2TDIoxsustkMiFOB-35">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="182.5" y="140.5" as="sourcePoint" />
+            <mxPoint x="277.5" y="140.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-46" value="Cadastrar eventos e pagamentos" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="55" y="180" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-47" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-5" target="R5aP2TDIoxsustkMiFOB-35">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="210" y="130" as="sourcePoint" />
+            <mxPoint x="305" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-48" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-46" target="R5aP2TDIoxsustkMiFOB-36">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="180" y="209.5" as="sourcePoint" />
+            <mxPoint x="275" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-49" value="Visualizar agenda" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="275" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-50" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-46" target="R5aP2TDIoxsustkMiFOB-49">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="160" y="250" as="sourcePoint" />
+            <mxPoint x="260" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-51" value="extends" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-36" target="R5aP2TDIoxsustkMiFOB-7">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="460" y="145" as="sourcePoint" />
+            <mxPoint x="583" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-52" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-49" target="R5aP2TDIoxsustkMiFOB-30">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="400" y="310" as="sourcePoint" />
+            <mxPoint x="518" y="359" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-53" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-31" target="R5aP2TDIoxsustkMiFOB-43">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="220" y="250" as="sourcePoint" />
+            <mxPoint x="338" y="299" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-54" value="Direcionar para assinatura digital" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="270" y="435" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-55" value="extends" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="R5aP2TDIoxsustkMiFOB-8" source="R5aP2TDIoxsustkMiFOB-32" target="R5aP2TDIoxsustkMiFOB-54">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="130" y="590" as="sourcePoint" />
+            <mxPoint x="295" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R5aP2TDIoxsustkMiFOB-56" value="Gerar relatório de eventos, clientes e pagamentos" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="R5aP2TDIoxsustkMiFOB-8">
+          <mxGeometry x="55" y="540" width="120" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
