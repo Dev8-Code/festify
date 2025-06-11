@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../providers/login_providers.dart';
-import '../../custom_app_bar.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -15,7 +14,6 @@ class LoginPage extends ConsumerWidget {
     final senhaVisivel = ref.watch(senhaVisivelProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(

@@ -1,3 +1,4 @@
+import 'package:festify/src/features/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:festify/src/features/custom_app_bar.dart';
@@ -17,19 +18,19 @@ class RegisterSupplierPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: const CustomAppBar(),
-      backgroundColor: const Color(0xFF121E30),
+      endDrawer: const MyDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 12),
-            const Center(
+            Center(
               child: Text(
                 'CADASTRO FORNECEDOR',
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onBackground,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -99,7 +100,11 @@ class RegisterSupplierPage extends ConsumerWidget {
                   backgroundColor: const Color(0xFFFFC107),
                   foregroundColor: const Color(0xFF121E30),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
                 ),
                 child: const Text(
@@ -111,31 +116,43 @@ class RegisterSupplierPage extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 
   Widget _buildInputField({
-    required String label,
-    required String value,
-    required Function(String) onChanged,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextField(
-        onChanged: onChanged,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: const TextStyle(color: Colors.white70),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white70),
+  required String label,
+  required String value,
+  required Function(String) onChanged,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: Builder(
+      builder: (context) {
+        final theme = Theme.of(context);
+        return TextField(
+          onChanged: onChanged,
+          style: TextStyle(color: theme.colorScheme.onBackground),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.transparent, // fundo 100% transparente
+            labelText: label,
+            labelStyle: TextStyle(
+              color: theme.colorScheme.onBackground.withOpacity(0.7),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: theme.colorScheme.onBackground.withOpacity(0.4),
+              ),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.amber, width: 2), // foco amarelo
+            ),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFFFC107), width: 2),
-          ),
-        ),
-      ),
-    );
-  }
+        );
+      },
+    ),
+  );
+}
+
 }

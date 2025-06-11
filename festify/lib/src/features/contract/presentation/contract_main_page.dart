@@ -1,3 +1,4 @@
+import 'package:festify/src/features/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../custom_app_bar.dart';
@@ -11,7 +12,7 @@ class ContractMainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: CustomAppBar(),
-      backgroundColor: Color(0xFF121E30),
+      endDrawer: const MyDrawer(),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Center(

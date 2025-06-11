@@ -1,3 +1,4 @@
+import 'package:festify/src/features/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/custom_app_bar.dart';
@@ -18,6 +19,7 @@ class CadastroPagamentoPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: CustomAppBar(),
+      endDrawer: const MyDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -160,7 +162,7 @@ class CadastroPagamentoPage extends ConsumerWidget {
             borderSide: BorderSide(color: Colors.white70),
           ),
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.yellow),
+            borderSide: BorderSide(color: Colors.amber, width: 2),
           ),
         ),
       ),

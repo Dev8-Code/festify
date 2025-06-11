@@ -1,3 +1,4 @@
+import 'package:festify/src/features/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:festify/src/features/custom_app_bar.dart';
@@ -20,7 +21,7 @@ class RegisterOperatorPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: const CustomAppBar(),
-      backgroundColor: const Color(0xFF121E30),
+      endDrawer: const MyDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
@@ -83,7 +84,7 @@ class RegisterOperatorPage extends ConsumerWidget {
                   backgroundColor: const Color(0xFFFFC107),
                   foregroundColor: const Color(0xFF121E30),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(50),
                   ),
                 ),
                 child: const Text(

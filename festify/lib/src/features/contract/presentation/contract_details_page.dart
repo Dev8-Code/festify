@@ -1,3 +1,4 @@
+import 'package:festify/src/features/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../custom_app_bar.dart';
@@ -11,7 +12,7 @@ class ContractDetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: CustomAppBar(),
-      backgroundColor: Color(0xFF121E30),
+      endDrawer: const MyDrawer(),
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: 30, horizontal: 12
@@ -95,7 +96,7 @@ class ContractButtons extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF1F3A5F),
+          backgroundColor: const Color.fromARGB(255, 30, 30, 30),
           padding: EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 25,

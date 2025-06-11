@@ -15,7 +15,7 @@ Widget build(BuildContext context, WidgetRef ref) {
   final textColor = isDarkMode ? Colors.white : Colors.black;
   final labelColor = isDarkMode ? Colors.white70 : Colors.black54;
   final borderColor = isDarkMode ? Colors.white70 : Colors.black38;
-  final focusColor = Colors.yellow;
+  final focusColor = Colors.amber;
 
   final nome = ref.watch(nomeProvider);
   final cpf = ref.watch(cpfProvider);
@@ -85,7 +85,7 @@ Widget build(BuildContext context, WidgetRef ref) {
               height: 50,
               child: isLoading
                   ? const Center(
-                      child: CircularProgressIndicator(color: Colors.yellow),
+                      child: CircularProgressIndicator(color: Color(0xFFFFC107)),
                     )
                   : ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -154,7 +154,7 @@ Widget build(BuildContext context, WidgetRef ref) {
           borderSide: BorderSide(color: borderColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: focusColor),
+          borderSide: BorderSide(color: focusColor, width: 2),
         ),
       ),
     ),

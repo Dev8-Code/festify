@@ -13,7 +13,6 @@ class PasswordResetPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: CustomAppBar(),
-      backgroundColor: Color(0xFF121E30),
       body: Padding(
         padding: EdgeInsets.all(24),
         child: Column(
@@ -71,23 +70,18 @@ class PasswordResetPage extends ConsumerWidget {
                             SnackBar(content: Text('Link enviado!')),
                           );
                         },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all<Color>(Color(0xFFFFC107)),
-                          padding: WidgetStateProperty.all<EdgeInsets>(
-                            EdgeInsets.symmetric(vertical: 8),
-                          ),
-                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.yellow[700],
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                        ),),
                         child: Text(
                           'Enviar link para redefinição',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: const Color(0xFF121E30),
                         ),
                       ),
                     ),
