@@ -129,13 +129,23 @@ class HomePage extends StatelessWidget {
               children: [
                 const Text(
                   'Selecione o tipo de cliente',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 1, 4, 6), 
+                    ),
+                  ),
                 const SizedBox(height: 20),
                 RadioListTile<String>(
                   value: 'fisica',
                   groupValue: null,
-                  title: const Text('PESSOA FÍSICA'),
+                  title: const Text(
+                    'PESSOA FÍSICA',                   
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 1, 4, 6), 
+                    )
+                  ),
                   onChanged: (value) {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/cadastro-cliente-fisica');
@@ -145,7 +155,13 @@ class HomePage extends StatelessWidget {
                 RadioListTile<String>(
                   value: 'juridica',
                   groupValue: null,
-                  title: const Text('PESSOA JURÍDICA'),
+                  title: const Text(
+                    'PESSOA JURÍDICA',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 1, 4, 6), 
+                    )
+                  ),
                   onChanged: (value) {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/cadastro-cliente-juridica');
@@ -158,7 +174,7 @@ class HomePage extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'Fechar',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 1, 4, 6)),
                     ),
                   ),
                 ),
