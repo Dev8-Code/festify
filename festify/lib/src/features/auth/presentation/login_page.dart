@@ -19,6 +19,9 @@ class LoginPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 40),
+            Image.asset('assets/logo.png', height: 100),
+            const SizedBox(height: 24),
             const Text(
               'LOGIN',
               style: TextStyle(
@@ -32,17 +35,16 @@ class LoginPage extends ConsumerWidget {
 
             // Campo Email
             TextField(
-              onChanged:
-                  (value) => ref.read(emailProvider.notifier).state = value,
-              decoration: const InputDecoration(
-                labelText: 'E-mail',
-                labelStyle: TextStyle(color: Colors.white70),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: 'E-mail',
+                hintStyle: const TextStyle(color: Colors.white70),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.white38),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.yellow),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.amber),
                 ),
               ),
               style: const TextStyle(color: Colors.white),
@@ -53,15 +55,16 @@ class LoginPage extends ConsumerWidget {
             TextField(
               onChanged:
                   (value) => ref.read(senhaProvider.notifier).state = value,
+              obscureText: !senhaVisivel,
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                labelText: 'Senha',
-                labelStyle: const TextStyle(color: Colors.white70),
-                border: const OutlineInputBorder(),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.yellow),
+                hintText: 'Senha',
+                hintStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Colors.transparent,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
                 ),
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -73,9 +76,15 @@ class LoginPage extends ConsumerWidget {
                         !senhaVisivel;
                   },
                 ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.white38),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.amber),
+                ),
               ),
-              obscureText: !senhaVisivel,
-              style: const TextStyle(color: Colors.white),
             ),
             const SizedBox(height: 16),
 

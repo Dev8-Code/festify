@@ -121,38 +121,43 @@ class RegisterSupplierPage extends ConsumerWidget {
   }
 
   Widget _buildInputField({
-  required String label,
-  required String value,
-  required Function(String) onChanged,
-}) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 16),
-    child: Builder(
-      builder: (context) {
-        final theme = Theme.of(context);
-        return TextField(
-          onChanged: onChanged,
-          style: TextStyle(color: theme.colorScheme.onBackground),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.transparent, // fundo 100% transparente
-            labelText: label,
-            labelStyle: TextStyle(
-              color: theme.colorScheme.onBackground.withOpacity(0.7),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: theme.colorScheme.onBackground.withOpacity(0.4),
+    required String label,
+    required String value,
+    required Function(String) onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Builder(
+        builder: (context) {
+          final theme = Theme.of(context);
+          return TextField(
+            onChanged: onChanged,
+            style: TextStyle(color: theme.colorScheme.onBackground),
+            decoration: InputDecoration(
+              hintText: label,
+              hintStyle: TextStyle(
+                color: theme.colorScheme.onBackground.withOpacity(0.6),
+              ),
+              filled: true,
+              fillColor: Colors.transparent,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.onBackground.withOpacity(0.4),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.amber, width: 2),
               ),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.amber, width: 2), // foco amarelo
-            ),
-          ),
-        );
-      },
-    ),
-  );
-}
-
+          );
+        },
+      ),
+    );
+  }
 }
