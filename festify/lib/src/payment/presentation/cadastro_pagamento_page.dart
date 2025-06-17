@@ -36,11 +36,7 @@ class CadastroPagamentoPage extends ConsumerWidget {
             _buildCurrencyInput(ref, 'Valor contrato', valorContratoProvider),
             _buildCurrencyInput(ref, 'Valor pago', valorPagoProvider),
             _buildInput(ref, 'Qtde parcelas', qtdeParcelasProvider),
-            _buildInput(
-              ref,
-              'Data vencimento (dd/mm/aaaa)',
-              dataVencimentoProvider,
-            ),
+            _buildDatePicker(context, ref),
 
             const SizedBox(height: 16),
             Container(
@@ -65,7 +61,7 @@ class CadastroPagamentoPage extends ConsumerWidget {
                       )
                       : ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow[700],
+                          backgroundColor: Colors.amber,
                           foregroundColor: const Color(0xFF121E30),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50),
@@ -131,11 +127,16 @@ class CadastroPagamentoPage extends ConsumerWidget {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white70),
-          enabledBorder: const OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: Colors.white70),
+            
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.yellow),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12) ,
+            borderSide: BorderSide(color: Colors.amber),
+            
+            
           ),
         ),
       ),
@@ -158,14 +159,61 @@ class CadastroPagamentoPage extends ConsumerWidget {
           prefixStyle: const TextStyle(color: Colors.white),
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white70),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white70),
+          enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.white70),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.amber, width: 2),
+          focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.amber, width: 2),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildDatePicker(BuildContext context, WidgetRef ref) {
+  final data = ref.watch(dataVencimentoProvider);
+
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: GestureDetector(
+      onTap: () async {
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2100),
+          locale: const Locale('pt', 'BR'),
+        );
+        if (picked != null) {
+          final dataFormatada = '${picked.day.toString().padLeft(2, '0')}/'
+              '${picked.month.toString().padLeft(2, '0')}/'
+              '${picked.year}';
+          ref.read(dataVencimentoProvider.notifier).state = dataFormatada;
+        }
+      },
+      child: AbsorbPointer(
+        child: TextField(
+          controller: TextEditingController(text: data),
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            labelText: 'Data vencimento',
+            labelStyle: const TextStyle(color: Colors.white70),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.white70),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.amber, width: 2),
+            ),
+            suffixIcon: const Icon(Icons.calendar_today, color: Colors.white70),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 }

@@ -26,7 +26,7 @@ Widget build(BuildContext context) {
             'Selecione uma opção',
             style: TextStyle(color: textColor, fontSize: 18),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 55),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -37,7 +37,7 @@ Widget build(BuildContext context) {
                 onTap: () => Navigator.pushNamed(context, '/cadastro-evento'),
                 isDarkMode: isDarkMode,
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: 55),
               _buildOptionCard(
                 context: context,
                 icon: Icons.person,

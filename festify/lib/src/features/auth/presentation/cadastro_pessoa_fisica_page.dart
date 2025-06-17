@@ -151,9 +151,13 @@ Widget build(BuildContext context, WidgetRef ref) {
         labelText: label,
         labelStyle: TextStyle(color: labelColor),
         enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+
           borderSide: BorderSide(color: borderColor),
         ),
         focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+
           borderSide: BorderSide(color: focusColor, width: 2),
         ),
       ),

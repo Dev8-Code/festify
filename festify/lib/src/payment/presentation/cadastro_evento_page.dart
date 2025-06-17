@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/cadastro_evento_providers.dart';
 
-
 class CadastroEventoPage extends ConsumerWidget {
   const CadastroEventoPage({super.key});
 
@@ -15,6 +14,7 @@ class CadastroEventoPage extends ConsumerWidget {
     final diasMontagem = ref.watch(diasMontagemProvider);
     final pagadorBeneficiario = ref.watch(pagadorBeneficiarioProvider);
     final isLoading = ref.watch(isLoadingCadastroEventoProvider);
+    final beneficiario = ref.watch(beneficiarioProvider);
 
     return Scaffold(
       appBar: CustomAppBar(),
@@ -31,8 +31,21 @@ class CadastroEventoPage extends ConsumerWidget {
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             const SizedBox(height: 24),
+            _buildDatePicker(context, ref),
+            _buildTimePicker(context, ref),
             _buildInput(ref, 'Tipo de evento', tipoEventoProvider),
-            _buildInput(ref, 'Qtde de dias para montagem/desmontagem', diasMontagemProvider),
+                        Row(
+              children: [
+                Expanded(
+                  child: _buildInput(ref, 'Dias para montagem', diasMontagemProvider),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildInput(ref, 'Dias para desmontagem', diasDesmontagemProvider),
+                ),
+              ],
+            ),
+
 
             const SizedBox(height: 16),
             const Text(
@@ -82,7 +95,8 @@ class CadastroEventoPage extends ConsumerWidget {
                         textStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
-                        if ([tipoEvento, diasMontagem, ref.read(beneficiarioProvider)].any((e) => e.isEmpty)) {
+                          final diasDesmontagem = ref.watch(diasDesmontagemProvider);
+                            if ([tipoEvento, diasMontagem, diasDesmontagem, beneficiario].any((e) => e.isEmpty)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Preencha todos os campos')),
                           );
@@ -90,26 +104,22 @@ class CadastroEventoPage extends ConsumerWidget {
                         }
 
                         ref.read(isLoadingCadastroEventoProvider.notifier).state = true;
-                        await Future.delayed(const Duration(seconds: 1)); // Simula carregamento
+                        await Future.delayed(const Duration(seconds: 1));
                         ref.read(isLoadingCadastroEventoProvider.notifier).state = false;
 
-                        // Exibe sucesso (opcional)
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Evento salvo! Indo para pagamento...')),
                         );
 
-                        // Navegar para tela de pagamento
                         Navigator.of(context).pushNamed('/cadastro-pagamento');
                       },
-
                       child: const Text('Ir para pagamento'),
                     ),
             ),
           ],
         ),
       ),
-            bottomNavigationBar: CustomBottomNavBar(),
-
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 
@@ -124,12 +134,106 @@ class CadastroEventoPage extends ConsumerWidget {
           labelStyle: const TextStyle(color: Colors.white70),
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white70),
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
           ),
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.amber, width: 2.0),
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildDatePicker(BuildContext context, WidgetRef ref) {
+    final data = ref.watch(dataEventoProvider);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: GestureDetector(
+        onTap: () async {
+          final DateTime? picked = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2020),
+            lastDate: DateTime(2100),
+            locale: const Locale('pt', 'BR'),
+          );
+          if (picked != null) {
+            final dataFormatada = '${picked.day.toString().padLeft(2, '0')}/'
+                '${picked.month.toString().padLeft(2, '0')}/'
+                '${picked.year}';
+            ref.read(dataEventoProvider.notifier).state = dataFormatada;
+          }
+        },
+        child: AbsorbPointer(
+          child: TextField(
+            controller: TextEditingController(text: data),
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Data Evento',
+              labelStyle: const TextStyle(color: Colors.white70),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.white70),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.amber, width: 2),
+              ),
+              suffixIcon: const Icon(Icons.calendar_today, color: Colors.white70),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+Widget _buildTimePicker(BuildContext context, WidgetRef ref) {
+  final hora = ref.watch(horaEventoProvider);
+
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: GestureDetector(
+      onTap: () async {
+        final TimeOfDay? picked = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+          builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+              child: child!,
+            );
+          },
+        );
+        if (picked != null) {
+          final horaFormatada = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+          ref.read(horaEventoProvider.notifier).state = horaFormatada;
+        }
+      },
+      child: AbsorbPointer(
+        child: TextField(
+          controller: TextEditingController(text: hora),
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            labelText: 'Hora Evento',
+            labelStyle: const TextStyle(color: Colors.white70),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.white70),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.amber, width: 2),
+            ),
+            suffixIcon: const Icon(Icons.access_time, color: Colors.white70),
+          ),
+        ),
+      ),
+    ),
+  );
 }
+
+
+}
+

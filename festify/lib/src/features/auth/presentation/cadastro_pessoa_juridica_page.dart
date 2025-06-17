@@ -138,10 +138,12 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
           labelText: label,
           labelStyle: TextStyle(color: labelColor),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: borderColor),
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: borderColor),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.amber, width: 2),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.amber, width: 2),           
           ),
         ),
       ),

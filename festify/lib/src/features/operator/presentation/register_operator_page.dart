@@ -111,13 +111,21 @@ class RegisterOperatorPage extends ConsumerWidget {
         onChanged: (val) => ref.read(provider.notifier).state = val,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          labelText: label,
-          labelStyle: const TextStyle(color: Colors.white70),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white70),
+          hintText: label,
+          hintStyle: const TextStyle(color: Colors.white70),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFFFC107), width: 2),
+          filled: true,
+          fillColor: Colors.transparent,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.white70),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFFFFC107), width: 2),
           ),
         ),
       ),
@@ -138,8 +146,12 @@ class RegisterOperatorPage extends ConsumerWidget {
         onChanged: (val) => ref.read(textProvider.notifier).state = val,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          labelText: label,
-          labelStyle: const TextStyle(color: Colors.white70),
+          hintText: label,
+          hintStyle: const TextStyle(color: Colors.white70),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           suffixIcon: IconButton(
             icon: Icon(
               visivel ? Icons.visibility : Icons.visibility_off,
@@ -149,11 +161,13 @@ class RegisterOperatorPage extends ConsumerWidget {
               ref.read(visibilidadeProvider.notifier).state = !visivel;
             },
           ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white70),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.white70),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFFFC107), width: 2),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFFFFC107), width: 2),
           ),
         ),
       ),
