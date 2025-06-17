@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/providers/app_providers.dart';
 
-
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
@@ -21,14 +20,14 @@ class MyDrawer extends StatelessWidget {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.handshake),
-                      title: const Text('Cadastrar Fornecedor'),
+                      title: const Text('Fornecedor'),
                       onTap: () {
                         Navigator.pushNamed(context, '/register-supplier');
                       },
                     ),
                     ListTile(
                       leading: const Icon(Icons.person_add),
-                      title: const Text('Cadastrar Operador'),
+                      title: const Text('Operador'),
                       onTap: () {
                         Navigator.pushNamed(context, '/register-operator');
                       },
