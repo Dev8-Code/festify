@@ -39,14 +39,28 @@ class CardBasicStructure extends StatelessWidget {
               )
             ),
             SizedBox(height: 8),
-            Text(
-              'Nome contratante',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Roboto',
-                color: subtitleColor,
-              ),
+            Row(
+              children: [
+                Text(
+                  'Nome contratante',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Roboto',
+                    color: subtitleColor,
+                  ),
+                ),
+                SizedBox(width: 30),
+                Text(
+                  'R\$ X.XXX,XX',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Roboto',
+                    color: subtitleColor,
+                  ),
+                )
+              ],
             ),
           ],
         ),
