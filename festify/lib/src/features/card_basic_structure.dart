@@ -30,7 +30,7 @@ class CardBasicStructure extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Título contrato',
+              'XX/XX/XXXX',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,

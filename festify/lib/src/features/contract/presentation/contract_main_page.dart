@@ -29,13 +29,26 @@ class ContractMainPage extends ConsumerWidget {
                 )
               ),
               SizedBox(height: 40),
-              ContractCard(),
+              ContractSearchBar(),
+              SizedBox(height: 20),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    ContractFilter('Pendente Geração'),
+                    ContractFilter('Gerado'),
+                    ContractFilter('Pendente Assinatura'),
+                  ],
+                ),
+              ),
+              SizedBox(height: 40),
+              ContractCard('Gerado'),
               SizedBox(height: 12),
-              ContractCard(),
+              ContractCard('Assinado'),
               SizedBox(height: 12),
-              ContractCard(),
+              ContractCard('Pendente de Assinatura'),
               SizedBox(height: 12),
-              ContractCard(),
+              ContractCard('Pendente de geração'),
             ],
           ),
         ),
@@ -45,8 +58,73 @@ class ContractMainPage extends ConsumerWidget {
   }
 }
 
+class ContractFilter extends StatelessWidget {
+  final String text;
+
+  const ContractFilter(
+    String this.text, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 20),
+      margin: EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        color: Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.white,
+          width: .5,
+        ),
+      ),
+      child: Text(
+        text
+      ),
+    );
+  }
+}
+
+class ContractSearchBar extends StatelessWidget {
+  const ContractSearchBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 65,
+      decoration: BoxDecoration(
+        color: Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: Icon(Icons.search, color: Colors.white),
+          ),
+          Expanded(
+            child: TextField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintStyle: TextStyle(color: Colors.white54),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ContractCard extends StatelessWidget {
-  const ContractCard({
+  final String status;
+
+  const ContractCard(String this.status, {
     super.key,
   });
 
@@ -57,7 +135,7 @@ class ContractCard extends StatelessWidget {
         Navigator.pushNamed(context, '/contract-details');
       },
       child: Card(
-        color: Color(0xFF1F3A5F),
+        color: Color(0xFF1E1E1E),
         child: Container(
           width: double.infinity,
           child: Padding(
@@ -70,11 +148,14 @@ class ContractCard extends StatelessWidget {
                   titleColor: Colors.white,
                   subtitleColor: Color(0xFFD4D9E0),
                 ),
-                Icon(
-                  Icons.description,
-                  color: Color(0xFFD4D9E0),
-                  size: 50,
-                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Status:'),
+                    Text(status),
+                  ],
+                )
               ],
             ),
           ),
