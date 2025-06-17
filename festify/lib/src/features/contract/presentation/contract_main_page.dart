@@ -25,16 +25,10 @@ class ContractMainPage extends ConsumerWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Roboto',
-                  color: Color(0xFFBDBDBD)
-                )
+                  color: Color(0xFFBDBDBD),
+                ),
               ),
               SizedBox(height: 40),
-              ContractCard(),
-              SizedBox(height: 12),
-              ContractCard(),
-              SizedBox(height: 12),
-              ContractCard(),
-              SizedBox(height: 12),
               ContractCard(),
             ],
           ),
@@ -46,9 +40,7 @@ class ContractMainPage extends ConsumerWidget {
 }
 
 class ContractCard extends StatelessWidget {
-  const ContractCard({
-    super.key,
-  });
+  const ContractCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -70,11 +62,7 @@ class ContractCard extends StatelessWidget {
                   titleColor: Colors.white,
                   subtitleColor: Color(0xFFD4D9E0),
                 ),
-                Icon(
-                  Icons.description,
-                  color: Color(0xFFD4D9E0),
-                  size: 50,
-                ),
+                Icon(Icons.description, color: Color(0xFFD4D9E0), size: 50),
               ],
             ),
           ),

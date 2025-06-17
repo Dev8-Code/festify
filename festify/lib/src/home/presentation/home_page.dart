@@ -33,7 +33,7 @@ Widget build(BuildContext context) {
               _buildOptionCard(
                 context: context,
                 icon: Icons.event,
-                label: 'Evento',
+                label: 'Cadastrar Evento',
                 onTap: () => Navigator.pushNamed(context, '/cadastro-evento'),
                 isDarkMode: isDarkMode,
               ),

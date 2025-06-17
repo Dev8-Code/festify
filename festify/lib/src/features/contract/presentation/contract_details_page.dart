@@ -14,9 +14,7 @@ class ContractDetailsPage extends ConsumerWidget {
       appBar: CustomAppBar(),
       endDrawer: const MyDrawer(),
       body: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: 30, horizontal: 12
-        ),
+        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -46,12 +44,12 @@ class ContractDetailsPage extends ConsumerWidget {
                             fontSize: 15,
                             fontFamily: 'Roboto',
                             fontWeight: FontWeight.w500,
-                          )
+                          ),
                         ),
                       ),
                     ),
                   ],
-                )
+                ),
               ),
             ),
             SizedBox(height: 24),
@@ -71,7 +69,7 @@ class ContractDetailsPage extends ConsumerWidget {
                   text: 'Assinar \n contrato',
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -84,11 +82,7 @@ class ContractButtons extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const ContractButtons({
-    super.key,
-    required this.icon,
-    required this.text,
-  });
+  const ContractButtons({super.key, required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -97,24 +91,18 @@ class ContractButtons extends StatelessWidget {
         onPressed: () {},
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color.fromARGB(255, 30, 30, 30),
-          padding: EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 25,
-          ),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
           iconSize: 35,
-          elevation: 50
+          elevation: 50,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: Colors.white,
-            ),
+            Icon(icon, color: Colors.white),
             Text(
               text,
               style: TextStyle(
