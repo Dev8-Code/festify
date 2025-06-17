@@ -10,7 +10,6 @@ class AgendaVisualizacaoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121E30),
       appBar: const CustomAppBar(),
       bottomNavigationBar: const CustomBottomNavBar(),
       body: Padding(
@@ -38,10 +37,10 @@ class AgendaVisualizacaoPage extends StatelessWidget {
                 children: [
                   const ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: Color.fromARGB(255, 255, 233, 39),
+                    backgroundColor: Colors.amber,
                       child: Text(
                         '1',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),
                       ),
                     ),
                     title: Text('Evento 1', style: TextStyle(color: Colors.black)),
@@ -80,14 +79,14 @@ class AgendaVisualizacaoPage extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 249, 224, 0),
+                            backgroundColor: Colors.amber,
                             ),
                             onPressed: () {
                               Navigator.pop(context);
                             },
                             child: const Text(
                               'Voltar',
-                              style: TextStyle(color: Colors.white),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.black),
                             ),
                           ),
                         )

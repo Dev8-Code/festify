@@ -47,6 +47,7 @@ class CustomBottomNavBar extends StatelessWidget {
               Navigator.pushNamed(context, '/contract-main');
               break;
             case 2:
+           Navigator.pushNamed(context, '/agenda-principal'); 
               break;
           }
         },

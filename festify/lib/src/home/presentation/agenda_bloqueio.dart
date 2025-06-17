@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../features/custom_app_bar.dart';
 import '../../features/custom_bottom_nav_bar.dart';
-
+import '../../features/custom_drawer.dart';
 
 class AgendaBloqueioDatasPage extends StatefulWidget {
   const AgendaBloqueioDatasPage({super.key});
@@ -44,15 +44,23 @@ class _AgendaBloqueioDatasPageState extends State<AgendaBloqueioDatasPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final hintColor = isDarkMode ? Colors.white54 : Colors.black54;
+    final borderColor = isDarkMode ? Colors.orange : Colors.deepOrange;
+    final bgColor = isDarkMode ? Colors.black : Colors.white;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF121E30),
       appBar: const CustomAppBar(),
+      endDrawer: const MyDrawer(),
       bottomNavigationBar: const CustomBottomNavBar(),
+      
+      backgroundColor: bgColor,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Selecione a data para bloqueio:',
@@ -63,16 +71,18 @@ class _AgendaBloqueioDatasPageState extends State<AgendaBloqueioDatasPage> {
             TextField(
               controller: _controller,
               keyboardType: TextInputType.datetime,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: textColor),
               decoration: InputDecoration(
                 hintText: 'DD/MM/AAAA',
-                hintStyle: const TextStyle(color: Colors.white54),
+                hintStyle: TextStyle(color: hintColor),
+                filled: true,
+                fillColor: isDarkMode ? Colors.white12 : Colors.grey[200],
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.orange),
+                  borderSide: BorderSide(color: borderColor),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.orangeAccent),
+                  borderSide: BorderSide(color: borderColor, width: 2),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -90,25 +100,25 @@ class _AgendaBloqueioDatasPageState extends State<AgendaBloqueioDatasPage> {
                   _controller.text = formatter.format(selected);
                 });
               },
-              calendarStyle: const CalendarStyle(
+              calendarStyle: CalendarStyle(
                 todayDecoration: BoxDecoration(
-                  color: Colors.yellow,
+                  color: Colors.amber,
                   shape: BoxShape.circle,
                 ),
                 selectedDecoration: BoxDecoration(
                   color: Colors.orange,
                   shape: BoxShape.circle,
                 ),
-                defaultTextStyle: TextStyle(color: Colors.white),
-                weekendTextStyle: TextStyle(color: Colors.white70),
+                defaultTextStyle: TextStyle(color: textColor),
+                weekendTextStyle: TextStyle(color: textColor.withOpacity(0.7)),
               ),
-              headerStyle: const HeaderStyle(
-                titleTextStyle: TextStyle(color: Colors.white),
+              headerStyle: HeaderStyle(
+                titleTextStyle: TextStyle(color: textColor),
                 formatButtonVisible: false,
-                leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
-                rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
+                leftChevronIcon: Icon(Icons.chevron_left, color: textColor),
+                rightChevronIcon: Icon(Icons.chevron_right, color: textColor),
               ),
-              daysOfWeekStyle: const DaysOfWeekStyle(
+              daysOfWeekStyle: DaysOfWeekStyle(
                 weekdayStyle: TextStyle(color: Colors.orange),
                 weekendStyle: TextStyle(color: Colors.orangeAccent),
               ),
@@ -116,14 +126,14 @@ class _AgendaBloqueioDatasPageState extends State<AgendaBloqueioDatasPage> {
             const SizedBox(height: 40),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 255, 233, 39),
+                backgroundColor: Colors.amber,
               ),
               onPressed: () {
                 // ação ao bloquear data
               },
               child: const Text(
                 'Bloquear',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
           ],

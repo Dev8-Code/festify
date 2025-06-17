@@ -12,9 +12,7 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white : Colors.black;
-    final labelColor = isDarkMode ? Colors.white70 : Colors.black54;
-    final borderColor = isDarkMode ? Colors.white70 : Colors.black38;
-    final focusColor = Colors.amber;
+
 
     final razaoSocial = ref.watch(razaoSocialProvider);
     final cnpj = ref.watch(cnpjProvider);
@@ -138,10 +136,12 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
           labelText: label,
           labelStyle: TextStyle(color: labelColor),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: borderColor),
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: borderColor),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.amber, width: 2),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.amber, width: 2),           
           ),
         ),
       ),
