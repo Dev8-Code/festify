@@ -12,9 +12,7 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white : Colors.black;
-    final labelColor = isDarkMode ? Colors.white70 : Colors.black54;
-    final borderColor = isDarkMode ? Colors.white70 : Colors.black38;
-    final focusColor = Colors.amber;
+
 
     final razaoSocial = ref.watch(razaoSocialProvider);
     final cnpj = ref.watch(cnpjProvider);

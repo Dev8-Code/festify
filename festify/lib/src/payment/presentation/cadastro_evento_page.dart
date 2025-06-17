@@ -10,6 +10,13 @@ class CadastroEventoPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final labelColor = isDark ? Colors.white70 : Colors.black54;
+    final borderColor = isDark ? Colors.white70 : Colors.black45;
+    final iconColor = labelColor;
+    final fillColor = isDark ? Colors.white10 : Colors.grey[100];
+
     final tipoEvento = ref.watch(tipoEventoProvider);
     final diasMontagem = ref.watch(diasMontagemProvider);
     final pagadorBeneficiario = ref.watch(pagadorBeneficiarioProvider);
@@ -19,38 +26,37 @@ class CadastroEventoPage extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(),
       endDrawer: const MyDrawer(),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 10),
-            const Text(
+            Text(
               'Preencha os campos abaixo',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 18),
+              style: TextStyle(color: textColor, fontSize: 18),
             ),
             const SizedBox(height: 24),
-            _buildDatePicker(context, ref),
-            _buildTimePicker(context, ref),
-            _buildInput(ref, 'Tipo de evento', tipoEventoProvider),
-                        Row(
+            _buildDatePicker(context, ref, textColor, labelColor, borderColor, iconColor),
+            _buildTimePicker(context, ref, textColor, labelColor, borderColor, iconColor),
+            _buildInput(ref, 'Tipo de evento', tipoEventoProvider, textColor, labelColor, borderColor, fillColor),
+            Row(
               children: [
                 Expanded(
-                  child: _buildInput(ref, 'Dias para montagem', diasMontagemProvider),
+                  child: _buildInput(ref, 'Dias para montagem', diasMontagemProvider, textColor, labelColor, borderColor, fillColor),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _buildInput(ref, 'Dias para desmontagem', diasDesmontagemProvider),
+                  child: _buildInput(ref, 'Dias para desmontagem', diasDesmontagemProvider, textColor, labelColor, borderColor, fillColor),
                 ),
               ],
             ),
-
-
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'O pagador é o beneficiário?',
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(color: labelColor),
             ),
             Row(
               children: [
@@ -62,7 +68,7 @@ class CadastroEventoPage extends ConsumerWidget {
                     }
                   },
                 ),
-                const Text('Sim', style: TextStyle(color: Colors.white)),
+                Text('Sim', style: TextStyle(color: textColor)),
                 const SizedBox(width: 16),
                 Checkbox(
                   value: pagadorBeneficiario == false,
@@ -72,13 +78,11 @@ class CadastroEventoPage extends ConsumerWidget {
                     }
                   },
                 ),
-                const Text('Não', style: TextStyle(color: Colors.white)),
+                Text('Não', style: TextStyle(color: textColor)),
               ],
             ),
-
             const SizedBox(height: 16),
-            _buildInput(ref, 'Beneficiário/Pagador', beneficiarioProvider),
-
+            _buildInput(ref, 'Beneficiário/Pagador', beneficiarioProvider, textColor, labelColor, borderColor, fillColor),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -95,8 +99,8 @@ class CadastroEventoPage extends ConsumerWidget {
                         textStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
-                          final diasDesmontagem = ref.watch(diasDesmontagemProvider);
-                            if ([tipoEvento, diasMontagem, diasDesmontagem, beneficiario].any((e) => e.isEmpty)) {
+                        final diasDesmontagem = ref.watch(diasDesmontagemProvider);
+                        if ([tipoEvento, diasMontagem, diasDesmontagem, beneficiario].any((e) => e.isEmpty)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Preencha todos os campos')),
                           );
@@ -123,18 +127,27 @@ class CadastroEventoPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildInput(WidgetRef ref, String label, StateProvider<String> provider) {
+  Widget _buildInput(
+    WidgetRef ref,
+    String label,
+    StateProvider<String> provider,
+    Color textColor,
+    Color labelColor,
+    Color borderColor,
+    Color? fillColor,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: textColor),
         onChanged: (value) => ref.read(provider.notifier).state = value,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.white70),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white70),
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          labelStyle: TextStyle(color: labelColor),
+         
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: borderColor),
+            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
           ),
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.amber, width: 2.0),
@@ -145,7 +158,14 @@ class CadastroEventoPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildDatePicker(BuildContext context, WidgetRef ref) {
+  Widget _buildDatePicker(
+    BuildContext context,
+    WidgetRef ref,
+    Color textColor,
+    Color labelColor,
+    Color borderColor,
+    Color iconColor,
+  ) {
     final data = ref.watch(dataEventoProvider);
 
     return Padding(
@@ -169,19 +189,19 @@ class CadastroEventoPage extends ConsumerWidget {
         child: AbsorbPointer(
           child: TextField(
             controller: TextEditingController(text: data),
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: textColor),
             decoration: InputDecoration(
               labelText: 'Data Evento',
-              labelStyle: const TextStyle(color: Colors.white70),
+              labelStyle: TextStyle(color: labelColor),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.white70),
+                borderSide: BorderSide(color: borderColor),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.amber, width: 2),
+              focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(color: Colors.amber, width: 2),
               ),
-              suffixIcon: const Icon(Icons.calendar_today, color: Colors.white70),
+              suffixIcon: Icon(Icons.calendar_today, color: iconColor),
             ),
           ),
         ),
@@ -189,51 +209,56 @@ class CadastroEventoPage extends ConsumerWidget {
     );
   }
 
-Widget _buildTimePicker(BuildContext context, WidgetRef ref) {
-  final hora = ref.watch(horaEventoProvider);
+  Widget _buildTimePicker(
+    BuildContext context,
+    WidgetRef ref,
+    Color textColor,
+    Color labelColor,
+    Color borderColor,
+    Color iconColor,
+  ) {
+    final hora = ref.watch(horaEventoProvider);
 
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 16.0),
-    child: GestureDetector(
-      onTap: () async {
-        final TimeOfDay? picked = await showTimePicker(
-          context: context,
-          initialTime: TimeOfDay.now(),
-          builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-              child: child!,
-            );
-          },
-        );
-        if (picked != null) {
-          final horaFormatada = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
-          ref.read(horaEventoProvider.notifier).state = horaFormatada;
-        }
-      },
-      child: AbsorbPointer(
-        child: TextField(
-          controller: TextEditingController(text: hora),
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            labelText: 'Hora Evento',
-            labelStyle: const TextStyle(color: Colors.white70),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.white70),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: GestureDetector(
+        onTap: () async {
+          final TimeOfDay? picked = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.now(),
+            builder: (context, child) {
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                child: child!,
+              );
+            },
+          );
+          if (picked != null) {
+            final horaFormatada =
+                '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+            ref.read(horaEventoProvider.notifier).state = horaFormatada;
+          }
+        },
+        child: AbsorbPointer(
+          child: TextField(
+            controller: TextEditingController(text: hora),
+            style: TextStyle(color: textColor),
+            decoration: InputDecoration(
+              labelText: 'Hora Evento',
+              labelStyle: TextStyle(color: labelColor),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: borderColor),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(color: Colors.amber, width: 2),
+              ),
+              suffixIcon: Icon(Icons.access_time, color: iconColor),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.amber, width: 2),
-            ),
-            suffixIcon: const Icon(Icons.access_time, color: Colors.white70),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
-
-
-}
-

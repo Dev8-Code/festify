@@ -8,10 +8,23 @@ class LoginPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     final email = ref.watch(emailProvider);
     final senha = ref.watch(senhaProvider);
     final isLoading = ref.watch(isLoadingProvider);
     final senhaVisivel = ref.watch(senhaVisivelProvider);
+
+    // Cores dinâmicas conforme tema
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final hintColor = isDarkMode ? Colors.white70 : Colors.black54;
+    final borderColor = isDarkMode ? Colors.white38 : Colors.black38;
+    final focusedBorderColor = Colors.amber;
+    final buttonBackground = Colors.yellow[700]!;
+    final buttonForeground = const Color(0xFF121E30);
+    final googleButtonBackground = isDarkMode ? Colors.grey[300] : Colors.white;
+    final googleButtonForeground = isDarkMode ? Colors.black : const Color(0xFF121E30);
+    final forgotPasswordColor = isDarkMode ? Colors.grey[400] : const Color(0xFF7C838C);
 
     return Scaffold(
       body: Padding(
@@ -22,44 +35,44 @@ class LoginPage extends ConsumerWidget {
             const SizedBox(height: 40),
             Image.asset('assets/logo.png', height: 100),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'LOGIN',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Roboto',
-                color: Colors.white,
+                color: textColor,
               ),
             ),
             const SizedBox(height: 16),
 
             // Campo Email
             TextField(
+              onChanged: (value) => ref.read(emailProvider.notifier).state = value,
               decoration: InputDecoration(
                 hintText: 'E-mail',
-                hintStyle: const TextStyle(color: Colors.white70),
+                hintStyle: TextStyle(color: hintColor),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Colors.white38),
+                  borderSide: BorderSide(color: borderColor),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Colors.amber),
+                  borderSide: BorderSide(color: focusedBorderColor),
                 ),
               ),
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: textColor),
             ),
             const SizedBox(height: 24),
 
             // Campo Senha
             TextField(
-              onChanged:
-                  (value) => ref.read(senhaProvider.notifier).state = value,
+              onChanged: (value) => ref.read(senhaProvider.notifier).state = value,
               obscureText: !senhaVisivel,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: textColor),
               decoration: InputDecoration(
                 hintText: 'Senha',
-                hintStyle: const TextStyle(color: Colors.white70),
+                hintStyle: TextStyle(color: hintColor),
                 filled: true,
                 fillColor: Colors.transparent,
                 contentPadding: const EdgeInsets.symmetric(
@@ -69,20 +82,19 @@ class LoginPage extends ConsumerWidget {
                 suffixIcon: IconButton(
                   icon: Icon(
                     senhaVisivel ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.white,
+                    color: hintColor,
                   ),
                   onPressed: () {
-                    ref.read(senhaVisivelProvider.notifier).state =
-                        !senhaVisivel;
+                    ref.read(senhaVisivelProvider.notifier).state = !senhaVisivel;
                   },
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Colors.white38),
+                  borderSide: BorderSide(color: borderColor),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Colors.amber),
+                  borderSide: BorderSide(color: focusedBorderColor),
                 ),
               ),
             ),
@@ -96,9 +108,9 @@ class LoginPage extends ConsumerWidget {
                   onPressed: () {
                     Navigator.pushNamed(context, '/password-reset');
                   },
-                  child: const Text(
+                  child: Text(
                     'Esqueci minha senha',
-                    style: TextStyle(color: Color(0xFF7C838C), fontSize: 14),
+                    style: TextStyle(color: forgotPasswordColor, fontSize: 14),
                   ),
                 ),
               ],
@@ -109,52 +121,51 @@ class LoginPage extends ConsumerWidget {
             SizedBox(
               width: 500,
               height: 50,
-              child:
-                  isLoading
-                      ? const Center(
-                        child: CircularProgressIndicator(color: Colors.yellow),
-                      )
-                      : ElevatedButton(
-                        onPressed: () async {
-                          if (email.isEmpty || senha.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Por favor, preencha todos os campos',
-                                ),
+              child: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(color: Colors.yellow),
+                    )
+                  : ElevatedButton(
+                      onPressed: () async {
+                        if (email.isEmpty || senha.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Por favor, preencha todos os campos',
                               ),
-                            );
-                            return;
-                          }
+                            ),
+                          );
+                          return;
+                        }
 
-                          ref.read(isLoadingProvider.notifier).state = true;
-                          await Future.delayed(const Duration(seconds: 2));
-                          ref.read(isLoadingProvider.notifier).state = false;
+                        ref.read(isLoadingProvider.notifier).state = true;
+                        await Future.delayed(const Duration(seconds: 2));
+                        ref.read(isLoadingProvider.notifier).state = false;
 
-                          if (email == 'a@a.com' && senha == '123') {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Login OK!')),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Login errado')),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow[700],
-                          foregroundColor: const Color(0xFF121E30),
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
-                          textStyle: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                        if (email == 'a@a.com' && senha == '123') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Login OK!')),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Login errado')),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: buttonBackground,
+                        foregroundColor: buttonForeground,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
                         ),
-                        child: const Text('Enviar'),
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
+                      child: const Text('Enviar'),
+                    ),
             ),
 
             const SizedBox(height: 16),
@@ -164,21 +175,21 @@ class LoginPage extends ConsumerWidget {
               width: double.infinity,
               height: 50,
               child: ElevatedButton.icon(
-                icon: const FaIcon(
+                icon: FaIcon(
                   FontAwesomeIcons.google,
-                  color: Color(0xFF121E30),
+                  color: googleButtonForeground,
                   size: 18,
                 ),
-                label: const Text(
+                label: Text(
                   'Entrar com Google',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Color(0xFF121E30),
+                    color: googleButtonForeground,
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: googleButtonBackground,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50.0),

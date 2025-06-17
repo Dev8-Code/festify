@@ -10,6 +10,8 @@ class RegisterOperatorPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     final nome = ref.watch(nomeOperadorProvider);
     final cpf = ref.watch(cpfOperadorProvider);
     final email = ref.watch(emailOperadorProvider);
@@ -18,6 +20,12 @@ class RegisterOperatorPage extends ConsumerWidget {
     final repetirSenha = ref.watch(repetirSenhaOperadorProvider);
     final senhaVisivel = ref.watch(senhaVisivelOperadorProvider);
     final repetirSenhaVisivel = ref.watch(repetirSenhaVisivelOperadorProvider);
+
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final labelColor = isDarkMode ? Colors.white70 : Colors.black54;
+    final borderColor = isDarkMode ? Colors.white70 : Colors.black38;
+    final buttonColor = Colors.amber[700]!;
+    final buttonTextColor = const Color(0xFF121E30);
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -28,33 +36,41 @@ class RegisterOperatorPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 12),
-            const Center(
+            Center(
               child: Text(
                 'CADASTRO OPERADOR',
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.white,
                   fontWeight: FontWeight.w600,
+                  color: textColor,
                 ),
               ),
             ),
             const SizedBox(height: 20),
 
-            _buildInput(ref, 'Nome', nomeOperadorProvider),
-            _buildInput(ref, 'CPF', cpfOperadorProvider),
-            _buildInput(ref, 'E-mail', emailOperadorProvider),
-            _buildInput(ref, 'Telefone', telefoneOperadorProvider),
+            _buildInput(ref, context, 'Nome', nomeOperadorProvider, textColor, labelColor, borderColor),
+            _buildInput(ref, context, 'CPF', cpfOperadorProvider, textColor, labelColor, borderColor),
+            _buildInput(ref, context, 'E-mail', emailOperadorProvider, textColor, labelColor, borderColor),
+            _buildInput(ref, context, 'Telefone', telefoneOperadorProvider, textColor, labelColor, borderColor),
             _buildPasswordInput(
               ref,
+              context,
               'Senha',
               senhaOperadorProvider,
               senhaVisivelOperadorProvider,
+              textColor,
+              labelColor,
+              borderColor,
             ),
             _buildPasswordInput(
               ref,
+              context,
               'Digite a senha novamente',
               repetirSenhaOperadorProvider,
               repetirSenhaVisivelOperadorProvider,
+              textColor,
+              labelColor,
+              borderColor,
             ),
 
             const SizedBox(height: 30),
@@ -81,8 +97,8 @@ class RegisterOperatorPage extends ConsumerWidget {
                   _showMessage(context, 'Operador cadastrado com sucesso!');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFFC107),
-                  foregroundColor: const Color(0xFF121E30),
+                  backgroundColor: buttonColor,
+                  foregroundColor: buttonTextColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),
@@ -102,30 +118,31 @@ class RegisterOperatorPage extends ConsumerWidget {
 
   Widget _buildInput(
     WidgetRef ref,
+    BuildContext context,
     String label,
     StateProvider<String> provider,
+    Color textColor,
+    Color labelColor,
+    Color borderColor,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
         onChanged: (val) => ref.read(provider.notifier).state = val,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: textColor),
         decoration: InputDecoration(
           hintText: label,
-          hintStyle: const TextStyle(color: Colors.white70),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
+          hintStyle: TextStyle(color: labelColor),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           filled: true,
           fillColor: Colors.transparent,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.white70),
+            borderSide: BorderSide(color: borderColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFFFC107), width: 2),
+            borderSide: const BorderSide(color: Colors.amber, width: 2),
           ),
         ),
       ),
@@ -134,40 +151,44 @@ class RegisterOperatorPage extends ConsumerWidget {
 
   Widget _buildPasswordInput(
     WidgetRef ref,
+    BuildContext context,
     String label,
     StateProvider<String> textProvider,
     StateProvider<bool> visibilidadeProvider,
+    Color textColor,
+    Color labelColor,
+    Color borderColor,
   ) {
     final visivel = ref.watch(visibilidadeProvider);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
         obscureText: !visivel,
         onChanged: (val) => ref.read(textProvider.notifier).state = val,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: textColor),
         decoration: InputDecoration(
           hintText: label,
-          hintStyle: const TextStyle(color: Colors.white70),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
+          hintStyle: TextStyle(color: labelColor),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           suffixIcon: IconButton(
             icon: Icon(
               visivel ? Icons.visibility : Icons.visibility_off,
-              color: Colors.white70,
+              color: labelColor,
             ),
             onPressed: () {
               ref.read(visibilidadeProvider.notifier).state = !visivel;
             },
           ),
+          filled: true,
+          fillColor: Colors.transparent,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.white70),
+            borderSide: BorderSide(color: borderColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFFFC107), width: 2),
+            borderSide: const BorderSide(color: Colors.amber, width: 2),
           ),
         ),
       ),
