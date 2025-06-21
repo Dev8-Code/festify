@@ -48,10 +48,42 @@ class RegisterOperatorPage extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
 
-            _buildInput(ref, context, 'Nome', nomeOperadorProvider, textColor, labelColor, borderColor),
-            _buildInput(ref, context, 'CPF', cpfOperadorProvider, textColor, labelColor, borderColor),
-            _buildInput(ref, context, 'E-mail', emailOperadorProvider, textColor, labelColor, borderColor),
-            _buildInput(ref, context, 'Telefone', telefoneOperadorProvider, textColor, labelColor, borderColor),
+            _buildInput(
+              ref,
+              context,
+              'Nome',
+              nomeOperadorProvider,
+              textColor,
+              labelColor,
+              borderColor,
+            ),
+            _buildInput(
+              ref,
+              context,
+              'CPF',
+              cpfOperadorProvider,
+              textColor,
+              labelColor,
+              borderColor,
+            ),
+            _buildInput(
+              ref,
+              context,
+              'E-mail',
+              emailOperadorProvider,
+              textColor,
+              labelColor,
+              borderColor,
+            ),
+            _buildInput(
+              ref,
+              context,
+              'Telefone',
+              telefoneOperadorProvider,
+              textColor,
+              labelColor,
+              borderColor,
+            ),
             _buildPasswordInput(
               ref,
               context,
@@ -133,7 +165,10 @@ class RegisterOperatorPage extends ConsumerWidget {
         decoration: InputDecoration(
           hintText: label,
           hintStyle: TextStyle(color: labelColor),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           filled: true,
           fillColor: Colors.transparent,
           enabledBorder: OutlineInputBorder(
@@ -170,7 +205,10 @@ class RegisterOperatorPage extends ConsumerWidget {
         decoration: InputDecoration(
           hintText: label,
           hintStyle: TextStyle(color: labelColor),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           suffixIcon: IconButton(
             icon: Icon(
               visivel ? Icons.visibility : Icons.visibility_off,

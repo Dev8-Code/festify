@@ -22,7 +22,7 @@ class MyDrawer extends StatelessWidget {
                       leading: const Icon(Icons.handshake),
                       title: const Text('Fornecedor'),
                       onTap: () {
-                        Navigator.pushNamed(context, '/register-supplier');
+                        Navigator.pushNamed(context, '/supplier-list');
                       },
                     ),
                     ListTile(

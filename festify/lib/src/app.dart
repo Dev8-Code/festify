@@ -18,6 +18,7 @@ import 'home/presentation/agenda_visualizacao.dart';
 import 'home/presentation/home_page.dart';
 import 'payment/presentation/cadastro_evento_page.dart';
 import 'payment/presentation/cadastro_pagamento_page.dart';
+import '../src/features/supplier/presentation/supplier_list_page.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -33,18 +34,20 @@ class App extends ConsumerWidget {
         '/contract-details': (context) => const ContractDetailsPage(),
         '/register-supplier': (context) => const RegisterSupplierPage(),
         '/register-operator': (context) => const RegisterOperatorPage(),
-        '/cadastro-pessoa-fisica': (context) => const CadastroPessoaFisicaPage(),
-        '/cadastro-pessoa-juridica': (context) => const CadastroPessoaJuridicaPage(),
+        '/cadastro-pessoa-fisica':
+            (context) => const CadastroPessoaFisicaPage(),
+        '/cadastro-pessoa-juridica':
+            (context) => const CadastroPessoaJuridicaPage(),
         '/cadastro-evento': (context) => const CadastroEventoPage(),
         '/cadastro-pagamento': (context) => const CadastroPagamentoPage(),
         '/home-page': (context) => const HomePage(),
         '/agenda-principal': (context) => const AgendaPrincipalPage(),
         '/agenda-visualizacao': (context) => const AgendaVisualizacaoPage(),
         '/agenda-bloqueio': (context) => const AgendaBloqueioDatasPage(),
-
+        '/supplier-list': (context) => const SupplierListPage(),
       },
-        supportedLocales: const [Locale('pt', 'BR')],
-        localizationsDelegates: const [
+      supportedLocales: const [Locale('pt', 'BR')],
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -52,9 +55,10 @@ class App extends ConsumerWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: ref.watch(colorProvider),
-          brightness: ref.watch(themeSwitchProvider)
-              ? Brightness.light
-              : Brightness.dark,
+          brightness:
+              ref.watch(themeSwitchProvider)
+                  ? Brightness.light
+                  : Brightness.dark,
         ),
       ),
     );
