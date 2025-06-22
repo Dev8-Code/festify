@@ -29,7 +29,7 @@ class MyDrawer extends StatelessWidget {
                       leading: const Icon(Icons.person_add),
                       title: const Text('Operador'),
                       onTap: () {
-                        Navigator.pushNamed(context, '/register-operator');
+                        Navigator.pushNamed(context, '/operator-list');
                       },
                     ),
                   ],

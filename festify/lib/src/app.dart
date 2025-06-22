@@ -19,6 +19,7 @@ import 'home/presentation/home_page.dart';
 import 'payment/presentation/cadastro_evento_page.dart';
 import 'payment/presentation/cadastro_pagamento_page.dart';
 import '../src/features/supplier/presentation/supplier_list_page.dart';
+import '../src/features/operator/presentation/operator_list_page.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -45,6 +46,7 @@ class App extends ConsumerWidget {
         '/agenda-visualizacao': (context) => const AgendaVisualizacaoPage(),
         '/agenda-bloqueio': (context) => const AgendaBloqueioDatasPage(),
         '/supplier-list': (context) => const SupplierListPage(),
+        '/operator-list': (context) => const OperatorListPage(),
       },
       supportedLocales: const [Locale('pt', 'BR')],
       localizationsDelegates: const [
