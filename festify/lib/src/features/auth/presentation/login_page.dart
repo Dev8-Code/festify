@@ -14,22 +14,13 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  String email = "";
+  String senha = "";
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(loginViewModelProvider);
     final senhaVisivel = ref.watch(senhaVisivelProvider);
-
-    String email = "";
-    String senha = "";
-
-    ref.listen(loginViewModelProvider, (previous, next) {
-      if (next is AsyncError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Não foi possível realizar o login.")),
-        );
-      }
-    });
 
     return Scaffold(
       appBar: CustomAppBar(),
@@ -113,11 +104,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 _ => SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed:
-                        () => {
-                          if (_formKey.currentState!.validate())
-                            ref.read(loginViewModelProvider.notifier).login(email, senha),
-                        },
+                  onPressed: () async {
+                    if (!_formKey.currentState!.validate()) {
+                        return;
+                      }
+
+                      final loginVM = ref.read(loginViewModelProvider.notifier);
+                      final result = await loginVM.login(email, senha);
+
+                      // Check if the widget is still mounted after async operation
+                      if (!context.mounted) return;
+
+                      if (!result) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Não foi possível realizar o login")),
+                        );
+                        return;
+                      }
+
+                      Navigator.pushNamed(context, '/contract-main');
+                  },
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all<Color>(
                         Color(0xFFFFC107),
