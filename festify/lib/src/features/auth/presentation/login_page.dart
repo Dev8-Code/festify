@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validator/form_validator.dart';
 import '../providers/login_providers.dart';
-import '../../custom_app_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -19,12 +19,24 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(loginViewModelProvider);
     final senhaVisivel = ref.watch(senhaVisivelProvider);
+    final isLoading = ref.watch(isLoadingProvider);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    // Cores dinâmicas conforme tema
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final hintColor = isDarkMode ? Colors.white70 : Colors.black54;
+    final borderColor = isDarkMode ? Colors.white38 : Colors.black38;
+    final focusedBorderColor = Colors.amber;
+    final buttonBackground = Colors.yellow[700]!;
+    final buttonForeground = const Color(0xFF121E30);
+    final googleButtonBackground = isDarkMode ? Colors.grey[300] : Colors.white;
+    final googleButtonForeground =
+        isDarkMode ? Colors.black : const Color(0xFF121E30);
+    final forgotPasswordColor =
+        isDarkMode ? Colors.grey[400] : const Color(0xFF7C838C);
 
     return Scaffold(
-      appBar: CustomAppBar(),
-      backgroundColor: Color(0xFF121E30),
       body: Padding(
         padding: EdgeInsets.all(24),
         child: Form(
@@ -32,58 +44,86 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 40),
+              Image.asset('assets/logo.png', height: 100),
+              const SizedBox(height: 24),
               Text(
                 'LOGIN',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Roboto',
-                  color: Colors.white,
+                  color: textColor,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+
+              // Campo Email
               TextFormField(
                 onChanged: (value) => email = value,
                 validator:
-                    ValidationBuilder()
+                    ValidationBuilder(requiredMessage: 'Email obrigatório')
+                        .required()
                         .email('Email inválido')
-                        .required('Email obrigatório')
                         .build(),
+                style: TextStyle(color: textColor),
                 decoration: InputDecoration(
+                  hintStyle: TextStyle(color: hintColor),
                   labelText: 'E-mail',
-                  border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: borderColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: focusedBorderColor),
                   ),
                 ),
               ),
-              SizedBox(height: 24),
+
+              // Campo senha
+              const SizedBox(height: 24),
               TextFormField(
                 onChanged: (value) => senha = value,
                 validator:
-                    ValidationBuilder()
+                    ValidationBuilder(requiredMessage: 'Senha obrigatória')
                         .minLength(6, 'Mínimo 6 caracteres')
-                        .required('Senha obrigatória')
+                        .required()
                         .build(),
+                obscureText: !senhaVisivel,
+                style: TextStyle(color: textColor),
                 decoration: InputDecoration(
-                  labelText: 'Senha',
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                  hintText: 'Senha',
+                  hintStyle: TextStyle(color: hintColor),
+                  filled: true,
+                  fillColor: Colors.transparent,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
                       senhaVisivel ? Icons.visibility : Icons.visibility_off,
+                      color: hintColor,
                     ),
                     onPressed: () {
                       ref.read(senhaVisivelProvider.notifier).state =
                           !senhaVisivel;
                     },
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: borderColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: focusedBorderColor),
+                  ),
                 ),
-                obscureText: !senhaVisivel,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+
+              // Link esqueci senha
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -93,61 +133,108 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     },
                     child: Text(
                       'Esqueci minha senha',
-                      style: TextStyle(color: Color(0xFF7C838C), fontSize: 14),
+                      style: TextStyle(
+                        color: forgotPasswordColor,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 60),
-              switch (viewModel) {
-                AsyncLoading() => const CircularProgressIndicator(),
-                _ => SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                  onPressed: () async {
-                    if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
 
-                      final loginVM = ref.read(loginViewModelProvider.notifier);
-                      final result = await loginVM.login(email, senha);
+              // Botão
+              // Botão Enviar
+              SizedBox(
+                width: 500,
+                height: 50,
+                child:
+                    isLoading
+                        ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.yellow,
+                          ),
+                        )
+                        : ElevatedButton(
+                          onPressed: () async {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
 
-                      // Check if the widget is still mounted after async operation
-                      if (!context.mounted) return;
+                            ref.read(isLoadingProvider.notifier).state = true;
 
-                      if (!result) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Não foi possível realizar o login")),
-                        );
-                        return;
-                      }
+                            final loginVM = ref.read(loginViewModelProvider.notifier);
+                            final result = await loginVM.login(email, senha);
 
-                      Navigator.pushNamed(context, '/contract-main');
-                  },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all<Color>(
-                        Color(0xFFFFC107),
-                      ),
-                      padding: WidgetStateProperty.all<EdgeInsets>(
-                        EdgeInsets.symmetric(vertical: 8),
-                      ),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                            ref.read(isLoadingProvider.notifier).state = false;
+                            // Check if the widget is still mounted after async operation
+                            if (!context.mounted) return;
+
+                            if (!result) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Não foi possível realizar o login",
+                                  ),
+                                ),
+                              );
+
+                              return;
+                            }
+
+                            Navigator.pushNamed(context, '/contract-main');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: buttonBackground,
+                            foregroundColor: buttonForeground,
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          child: const Text('Enviar'),
                         ),
-                      ),
-                    ),
-                    child: Text(
-                      'Enviar',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Botão Google
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton.icon(
+                  icon: FaIcon(
+                    FontAwesomeIcons.google,
+                    color: googleButtonForeground,
+                    size: 18,
+                  ),
+                  label: Text(
+                    'Entrar com Google',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: googleButtonForeground,
                     ),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: googleButtonBackground,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Login com Google (não implementado)'),
+                      ),
+                    );
+                  },
                 ),
-              },
+              ),
             ],
           ),
         ),
@@ -155,3 +242,4 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 }
+

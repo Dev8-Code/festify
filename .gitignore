@@ -8,7 +8,8 @@
 .history
 *.env
 
-
+# Environment variables
+.env
 
 # Flutter repo-specific
 /bin/cache/

@@ -5,12 +5,20 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-   await dotenv.load();
-   await Supabase.initialize(
-     url: dotenv.env['SUPABASE_URL']!,
-     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-   );
+  try {
+    await dotenv.load();
+
+    await Supabase.initialize(
+      url: dotenv.env['SUPABASE_URL']!,
+      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    );
+
+    print('Supabase inicializado com sucesso!');
+  } catch (e) {
+    print('Erro na inicialização: $e');
+  }
+
   runApp(ProviderScope(child: App()));
 }

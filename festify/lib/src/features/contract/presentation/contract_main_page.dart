@@ -1,3 +1,4 @@
+import 'package:festify/src/features/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../custom_app_bar.dart';
@@ -11,7 +12,7 @@ class ContractMainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: CustomAppBar(),
-      backgroundColor: Color(0xFF121E30),
+      endDrawer: const MyDrawer(),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Center(
@@ -24,16 +25,10 @@ class ContractMainPage extends ConsumerWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Roboto',
-                  color: Color(0xFFBDBDBD)
-                )
+                  color: Color(0xFFBDBDBD),
+                ),
               ),
               SizedBox(height: 40),
-              ContractCard(),
-              SizedBox(height: 12),
-              ContractCard(),
-              SizedBox(height: 12),
-              ContractCard(),
-              SizedBox(height: 12),
               ContractCard(),
             ],
           ),
@@ -45,9 +40,7 @@ class ContractMainPage extends ConsumerWidget {
 }
 
 class ContractCard extends StatelessWidget {
-  const ContractCard({
-    super.key,
-  });
+  const ContractCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +62,7 @@ class ContractCard extends StatelessWidget {
                   titleColor: Colors.white,
                   subtitleColor: Color(0xFFD4D9E0),
                 ),
-                Icon(
-                  Icons.description,
-                  color: Color(0xFFD4D9E0),
-                  size: 50,
-                ),
+                Icon(Icons.description, color: Color(0xFFD4D9E0), size: 50),
               ],
             ),
           ),
