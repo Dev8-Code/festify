@@ -25,8 +25,8 @@ class ContractMainPage extends ConsumerWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Roboto',
-                  color: Color(0xFFBDBDBD)
-                )
+                  color: Color(0xFFBDBDBD),
+                ),
               ),
               SizedBox(height: 40),
               ContractSearchBar(),
@@ -46,9 +46,9 @@ class ContractMainPage extends ConsumerWidget {
               SizedBox(height: 12),
               ContractCard('Assinado'),
               SizedBox(height: 12),
-              ContractCard('Pendente de Assinatura'),
+              ContractCard('Pendente de \nAssinatura'),
               SizedBox(height: 12),
-              ContractCard('Pendente de geração'),
+              ContractCard('Pendente de \ngeração'),
             ],
           ),
         ),
@@ -153,7 +153,10 @@ class ContractCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Status:'),
-                    Text(status),
+                    Text(
+                      status,
+                      overflow: TextOverflow.clip,
+                    ),
                   ],
                 )
               ],
