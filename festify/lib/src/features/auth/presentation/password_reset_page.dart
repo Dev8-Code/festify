@@ -28,12 +28,20 @@ class PasswordResetPage extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  ClipOval(
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: 125,
+                      height: 125,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                   Text(
-                    'REDEFINIÇÃO DE SENHA',
+                    'Redefinição de senha',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: textColor,
+                      color: labelColor,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -42,9 +50,8 @@ class PasswordResetPage extends ConsumerWidget {
                     'Informe um e-mail e enviaremos um link para recuperação da sua senha.',
                     style: TextStyle(
                       fontSize: 16,
-                      color: labelColor,
+                      color: Colors.white54,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 28),
                   TextField(
@@ -93,10 +100,9 @@ class PasswordResetPage extends ConsumerWidget {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow[700],
+                              backgroundColor: const Color(0xFFD4AF37),
                               foregroundColor: const Color(0xFF121E30),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              padding: const EdgeInsets.symmetric(vertical: 16.0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50.0),
                               ),
