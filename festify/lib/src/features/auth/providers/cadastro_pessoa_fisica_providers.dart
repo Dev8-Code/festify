@@ -12,6 +12,7 @@ final logradouroProvider = StateProvider<String>((ref) => '');
 final bairroProvider = StateProvider<String>((ref) => '');
 final cidadeProvider = StateProvider<String>((ref) => '');
 final estadoProvider = StateProvider<String>((ref) => '');
+final dataNascimentoProvider = StateProvider<DateTime?>((ref) => null);
 
 // Estado de carregamento
 final isLoadingCadastroProvider = StateProvider<bool>((ref) => false);

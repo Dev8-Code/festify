@@ -1,15 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-Future<void> registerOperator({
+Future<String> registerOperator({
   required String nome,
   required String cpf,
   required String email,
   required String telefone,
   required String senha,
-
 }) async {
-
   try {
     await Supabase.instance.client.from('usuarios').insert({
       'nome_razao_social': nome,
