@@ -20,6 +20,7 @@ import 'payment/presentation/cadastro_evento_page.dart';
 import 'payment/presentation/cadastro_pagamento_page.dart';
 import '../src/features/supplier/presentation/supplier_list_page.dart';
 import '../src/features/operator/presentation/operator_list_page.dart';
+import '../src/features/clientes/presentation/clients_list_page.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -47,6 +48,7 @@ class App extends ConsumerWidget {
         '/agenda-bloqueio': (context) => const AgendaBloqueioDatasPage(),
         '/supplier-list': (context) => const SupplierListPage(),
         '/operator-list': (context) => const OperatorListPage(),
+        '/clients-list': (context) => const ClientListPage(),
       },
       supportedLocales: const [Locale('pt', 'BR')],
       localizationsDelegates: const [
