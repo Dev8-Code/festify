@@ -4,6 +4,7 @@ import '../providers/cadastro_pessoa_juridica_providers.dart';
 import '../../custom_app_bar.dart';
 import '../../custom_bottom_nav_bar.dart';
 import '../../custom_drawer.dart';
+import 'festify/src/features/auth/services/cadastracliente_service.dart'
 
 class CadastroPessoaJuridicaPage extends ConsumerWidget {
   const CadastroPessoaJuridicaPage({super.key});
@@ -87,7 +88,14 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
                             );
                             return;
                           }
-
+                          await cadastraJuridica(
+                            context: context,
+                            razaoSocial: razaoSocial,
+                            cnpj: cnpj,
+                            responsavel: responsavel,
+                            email: email,
+                            telefone: telefone,
+                          )
                           ref
                               .read(isLoadingCadastroJuridicoProvider.notifier)
                               .state = true;

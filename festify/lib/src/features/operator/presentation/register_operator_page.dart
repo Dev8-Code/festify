@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:festify/src/features/custom_app_bar.dart';
 import 'package:festify/src/features/custom_bottom_nav_bar.dart';
 import 'package:festify/src/features/operator/providers/register_operator_providers.dart';
+import 'package:festify/src/features/operator/services/operator_service.dart';
 
 class RegisterOperatorPage extends ConsumerWidget {
   const RegisterOperatorPage({super.key});
@@ -109,15 +110,8 @@ class RegisterOperatorPage extends ConsumerWidget {
             SizedBox(
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  if ([
-                    nome,
-                    cpf,
-                    email,
-                    telefone,
-                    senha,
-                    repetirSenha,
-                  ].any((e) => e.isEmpty)) {
+                onPressed: () async {
+                  if ([nome, cpf, email, telefone, senha, repetirSenha,].any((e) => e.isEmpty)) {
                     _showMessage(context, 'Preencha todos os campos');
                     return;
                   }
@@ -126,7 +120,13 @@ class RegisterOperatorPage extends ConsumerWidget {
                     return;
                   }
 
-                  _showMessage(context, 'Operador cadastrado com sucesso!');
+                  await registerOperator(
+                    nome: nome,
+                    cpf: cpf,
+                    email: email,
+                    telefone: telefone,
+                    senha: senha,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: buttonColor,

@@ -4,6 +4,7 @@ import '../../custom_drawer.dart';
 import '../providers/cadastro_pessoa_fisica_providers.dart';
 import '../../custom_app_bar.dart';
 import '../../custom_bottom_nav_bar.dart';
+import 'festify/src/features/auth/services/cadastracliente_service.dart'
 // imports...
 
 class CadastroPessoaFisicaPage extends ConsumerWidget {
@@ -112,7 +113,20 @@ Widget build(BuildContext context, WidgetRef ref) {
                           );
                           return;
                         }
-
+                        await cadastrarFisica(
+                          context: context,
+                          nome: nome,
+                          cpf: cpf,
+                          rg: rg,
+                          email: email,
+                          telefone: telefone,
+                          cep: cep,
+                          numero: numero,
+                          logradouro: logradouro,
+                          bairro: bairro,
+                          cidade: cidade,
+                          estado: estado,
+                        )
                         ref.read(isLoadingCadastroProvider.notifier).state = true;
                         await Future.delayed(const Duration(seconds: 2));
                         ref.read(isLoadingCadastroProvider.notifier).state = false;
