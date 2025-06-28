@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<String> registerOperator({
@@ -19,8 +19,12 @@ Future<String> registerOperator({
       'status_usuario': 'ativo',
     });
 
-    return 'Operador cadastrado com sucesso!';
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Operador cadastrado com sucesso!')),
+    );
   } catch (e) {
-    return 'Erro ao cadastrar: $e';
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erro ao cadastrar: $e')),
+    );
   }
 }

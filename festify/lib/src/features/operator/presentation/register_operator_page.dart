@@ -111,16 +111,20 @@ class RegisterOperatorPage extends ConsumerWidget {
               height: 50,
               child: ElevatedButton(
                 onPressed: () async {
-                  if ([nome, cpf, email, telefone, senha, repetirSenha,].any((e) => e.isEmpty)) {
-                    _showMessage(context, 'Preencha todos os campos');
+                  if ([nome, cpf, email, telefone, senha, repetirSenha,].any((field) => field.isEmpty)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Preencha todos os campos')),
+                    )
                     return;
                   }
                   if (senha != repetirSenha) {
-                    _showMessage(context, 'As senhas não coincidem');
-                    return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('As senhas não coincidem')),
+                    )
                   }
 
                   await registerOperator(
+                    context: context
                     nome: nome,
                     cpf: cpf,
                     email: email,
