@@ -26,6 +26,7 @@ Future<void> cadastrarFisica({
       'email_cliente': email,
       'telefone_cliente': telefone,
       'endereco_cliente': enderecoCompleto,  
+      'tipo_cliente': 'fisica',
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -52,6 +53,7 @@ Future<void> cadastraJuridica({
       'responsavel_cliente': responsavel,
       'email_cliente': email,
       'telefone_cliente': telefone,
+      'tipo_cliente': 'juridico',
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
