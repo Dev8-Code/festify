@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
-
 import '../../features/custom_app_bar.dart';
 import '../../features/custom_bottom_nav_bar.dart';
 import '../../features/custom_drawer.dart';
@@ -11,7 +9,8 @@ class AgendaBloqueioDatasPage extends StatefulWidget {
   const AgendaBloqueioDatasPage({super.key});
 
   @override
-  State<AgendaBloqueioDatasPage> createState() => _AgendaBloqueioDatasPageState();
+  State<AgendaBloqueioDatasPage> createState() =>
+      _AgendaBloqueioDatasPageState();
 }
 
 class _AgendaBloqueioDatasPageState extends State<AgendaBloqueioDatasPage> {
@@ -54,7 +53,7 @@ class _AgendaBloqueioDatasPageState extends State<AgendaBloqueioDatasPage> {
       appBar: const CustomAppBar(),
       endDrawer: const MyDrawer(),
       bottomNavigationBar: const CustomBottomNavBar(),
-      
+
       backgroundColor: bgColor,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -125,15 +124,17 @@ class _AgendaBloqueioDatasPageState extends State<AgendaBloqueioDatasPage> {
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
               onPressed: () {
                 // ação ao bloquear data
               },
               child: const Text(
                 'Bloquear',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
           ],

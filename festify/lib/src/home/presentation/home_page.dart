@@ -1,7 +1,5 @@
-import 'package:festify/src/features/auth/presentation/cadastro_pessoa_fisica_page.dart';
 import 'package:festify/src/features/custom_drawer.dart';
 import 'package:flutter/material.dart';
-
 import '../../features/custom_app_bar.dart';
 import '../../features/custom_bottom_nav_bar.dart';
 
@@ -111,7 +109,7 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(118, 0, 0, 0),
+                    backgroundColor: const Color.fromARGB(255, 0, 0, 0),
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 48),
                     shape: RoundedRectangleBorder(
@@ -127,7 +125,7 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 12),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(150, 0, 0, 0),
+                    backgroundColor: const Color.fromARGB(255, 0, 0, 0),
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 48),
                     shape: RoundedRectangleBorder(

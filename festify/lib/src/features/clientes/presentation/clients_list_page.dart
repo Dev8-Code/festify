@@ -81,9 +81,12 @@ class _ClientListPageState extends ConsumerState<ClientListPage> {
                             final matchesSearch = nomeFinal
                                 .toLowerCase()
                                 .contains(searchQuery);
+
                             final matchesFilter =
                                 filter == 'Ambos' ||
-                                tipo == filter.toLowerCase();
+                                (filter == 'Físicos' && tipo == 'fisica') ||
+                                (filter == 'Jurídicos' && tipo == 'juridica');
+
                             return matchesSearch && matchesFilter;
                           }).toList();
 
