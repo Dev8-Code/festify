@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<String> registerOperator({
+  required BuildContext context,
   required String nome,
   required String cpf,
   required String email,
@@ -22,9 +23,13 @@ Future<String> registerOperator({
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Operador cadastrado com sucesso!')),
     );
+
+    return 'success';
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Erro ao cadastrar: $e')),
     );
+
+    return 'error';
   }
 }

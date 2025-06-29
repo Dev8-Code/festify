@@ -114,17 +114,17 @@ class RegisterOperatorPage extends ConsumerWidget {
                   if ([nome, cpf, email, telefone, senha, repetirSenha,].any((field) => field.isEmpty)) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Preencha todos os campos')),
-                    )
+                    );
                     return;
                   }
                   if (senha != repetirSenha) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('As senhas não coincidem')),
-                    )
+                    );
                   }
 
                   await registerOperator(
-                    context: context
+                    context: context,
                     nome: nome,
                     cpf: cpf,
                     email: email,
