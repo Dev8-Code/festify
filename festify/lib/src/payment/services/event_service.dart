@@ -86,10 +86,12 @@ Future<int?> cadastrarEvento({
   required String horaEvento,
   required int diasMontagem,
   required int diasDesmontagem,
+  required String nomeBeneficiario,
   required String beneficiario,
   required int idCliente,
 }) async {
   final evento = Evento(
+    NomeBeneficiario: nomeBeneficiario,
     beneficiario: beneficiario,
     tipoEvento: tipoEvento,
     dataEvento: _formataData(dataEvento).toString().split(' ')[0],

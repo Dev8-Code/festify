@@ -1,6 +1,7 @@
 class Evento {
   final int? idEvento;
   final String beneficiario;
+  final String NomeBeneficiario;
   final String tipoEvento;
   final String dataEvento;
   final String? horaEvento;
@@ -13,6 +14,7 @@ class Evento {
   Evento({
     this.idEvento,
     required this.beneficiario,
+    required this.NomeBeneficiario,
     required this.tipoEvento,
     required this.dataEvento,
     required this.horaEvento,
@@ -25,6 +27,7 @@ class Evento {
 
   Map<String, dynamic> toMap() => {
     'beneficiario_e_pagador_evento': beneficiario,
+    'nome_beneficiario_pagador_evento': NomeBeneficiario,
     'tipo_evento': tipoEvento,
     'data_evento': dataEvento,
     'hora_evento': horaEvento,
@@ -38,6 +41,7 @@ class Evento {
   factory Evento.fromMap(Map<String, dynamic> map) => Evento(
     idEvento: map['id_evento'],
     beneficiario: map['beneficiario_e_pagador_evento'],
+    NomeBeneficiario: map['nome_beneficiario_pagador_evento'],
     tipoEvento: map['tipo_evento'],
     dataEvento: map['data_evento'],
     horaEvento: map['hora_evento'],
@@ -50,6 +54,6 @@ class Evento {
 
   @override
   String toString() {
-    return 'Evento(idEvento: $idEvento, beneficiario: $beneficiario, tipoEvento: $tipoEvento, dataEvento: $dataEvento, diasMontagem: $diasMontagem, diasDesmontagem: $diasDesmontagem, statusEvento: $statusEvento, idCliente: $idCliente, idLocal: $idLocal)';
+    return 'Evento(idEvento: $idEvento, NomeBeneficiario: $NomeBeneficiario, beneficiario: $beneficiario, tipoEvento: $tipoEvento, dataEvento: $dataEvento, diasMontagem: $diasMontagem, diasDesmontagem: $diasDesmontagem, statusEvento: $statusEvento, idCliente: $idCliente, idLocal: $idLocal)';
   }
 }

@@ -17,6 +17,7 @@ class CadastroEventoPage extends ConsumerStatefulWidget {
 
 class _CadastroEventoPageState extends ConsumerState<CadastroEventoPage> {
   final _formKey = GlobalKey<FormState>();
+  final _nomeBeneficiarioController = TextEditingController();
   final _beneficiarioController = TextEditingController();
   final _tipoEventoController = TextEditingController();
   final _dataEventoController = TextEditingController();
@@ -26,7 +27,6 @@ class _CadastroEventoPageState extends ConsumerState<CadastroEventoPage> {
 
   bool _isLoading = false;
   int? _idClienteAtual;
-  bool? _pagadorBeneficiario;
 
   @override
   void initState() {
@@ -45,6 +45,7 @@ class _CadastroEventoPageState extends ConsumerState<CadastroEventoPage> {
 
   @override
   void dispose() {
+    _nomeBeneficiarioController.dispose();
     _beneficiarioController.dispose();
     _tipoEventoController.dispose();
     _dataEventoController.dispose();
@@ -94,6 +95,16 @@ class _CadastroEventoPageState extends ConsumerState<CadastroEventoPage> {
   Future<void> _salvarEvento() async {
     if (!_formKey.currentState!.validate()) return;
 
+    if (_beneficiarioController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, responda se o pagador é o beneficiário!'),
+        ),
+      );
+      setState(() => _isLoading = false);
+      return;
+    }
+
     if (_idClienteAtual == null) {
       ScaffoldMessenger.of(
         context,
@@ -109,6 +120,7 @@ class _CadastroEventoPageState extends ConsumerState<CadastroEventoPage> {
       final dataFormatada = '${dataParts[2]}-${dataParts[1]}-${dataParts[0]}';
 
       final evento = Evento(
+        NomeBeneficiario: _nomeBeneficiarioController.text.trim(),
         beneficiario: _beneficiarioController.text.trim(),
         tipoEvento: _tipoEventoController.text.trim(),
         dataEvento: dataFormatada,
@@ -271,44 +283,65 @@ class _CadastroEventoPageState extends ConsumerState<CadastroEventoPage> {
                         ],
                       ),
 
-                      const SizedBox(height: 16),
-
                       // Pergunta sobre pagador/beneficiário
+                      const SizedBox(height: 16),
                       Text(
                         'O pagador é o beneficiário?',
-                        style: TextStyle(color: labelColor),
+                        style: TextStyle(
+                          color: labelColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
-                          Checkbox(
-                            value: _pagadorBeneficiario == true,
-                            onChanged: (value) {
-                              setState(() {
-                                _pagadorBeneficiario =
-                                    value == true ? true : null;
-                              });
-                            },
+                          Expanded(
+                            child: RadioListTile<String>(
+                              title: Text(
+                                'Sim',
+                                style: TextStyle(color: textColor),
+                              ),
+                              value: 'sim',
+                              groupValue:
+                                  _beneficiarioController.text.isEmpty
+                                      ? null
+                                      : _beneficiarioController.text,
+                              onChanged: (value) {
+                                setState(() {
+                                  _beneficiarioController.text = value!;
+                                });
+                              },
+                              activeColor: Colors.amber,
+                            ),
                           ),
-                          Text('Sim', style: TextStyle(color: textColor)),
-                          const SizedBox(width: 16),
-                          Checkbox(
-                            value: _pagadorBeneficiario == false,
-                            onChanged: (value) {
-                              setState(() {
-                                _pagadorBeneficiario =
-                                    value == true ? false : null;
-                              });
-                            },
+                          Expanded(
+                            child: RadioListTile<String>(
+                              title: Text(
+                                'Não',
+                                style: TextStyle(color: textColor),
+                              ),
+                              value: 'não',
+                              groupValue:
+                                  _beneficiarioController.text.isEmpty
+                                      ? null
+                                      : _beneficiarioController.text,
+                              onChanged: (value) {
+                                setState(() {
+                                  _beneficiarioController.text = value!;
+                                });
+                              },
+                              activeColor: Colors.amber,
+                            ),
                           ),
-                          Text('Não', style: TextStyle(color: textColor)),
                         ],
                       ),
 
                       const SizedBox(height: 16),
 
-                      // Beneficiário/Pagador
+                      // Nome Beneficiário/Pagador
                       _buildInput(
-                        controller: _beneficiarioController,
+                        controller: _nomeBeneficiarioController,
                         label: 'Beneficiário/Pagador',
                         textColor: textColor,
                         labelColor: labelColor,
