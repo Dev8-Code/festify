@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:festify/src/features/custom_app_bar.dart';
 import 'package:festify/src/features/custom_bottom_nav_bar.dart';
 import 'package:festify/src/features/supplier/providers/register_supplier_providers.dart';
+import 'package:festify/src/features/supplier/services/supplier_service.dart';
 
 class RegisterSupplierPage extends ConsumerWidget {
   const RegisterSupplierPage({super.key});
@@ -40,60 +41,51 @@ class RegisterSupplierPage extends ConsumerWidget {
               label: 'Nome empresa',
               value: nome,
               onChanged:
-                  (val) =>
-                      ref.read(nomeFornecedorProvider.notifier).state = val,
+                  (val) => ref.read(nomeFornecedorProvider.notifier).state = val,
             ),
             _buildInputField(
               label: 'CNPJ',
               value: cnpj,
               onChanged:
-                  (val) =>
-                      ref.read(cnpjFornecedorProvider.notifier).state = val,
+                  (val) => ref.read(cnpjFornecedorProvider.notifier).state = val,
             ),
             _buildInputField(
               label: 'Razão social',
               value: razao,
               onChanged:
-                  (val) =>
-                      ref.read(razaoSocialFornecedorProvider.notifier).state =
-                          val,
+                  (val) => ref.read(razaoSocialFornecedorProvider.notifier).state = val,
             ),
             _buildInputField(
               label: 'E-mail',
               value: email,
               onChanged:
-                  (val) =>
-                      ref.read(emailFornecedorProvider.notifier).state = val,
+                  (val) => ref.read(emailFornecedorProvider.notifier).state = val,
             ),
             _buildInputField(
               label: 'Telefone',
               value: telefone,
               onChanged:
-                  (val) =>
-                      ref.read(telefoneFornecedorProvider.notifier).state = val,
+                  (val) => ref.read(telefoneFornecedorProvider.notifier).state = val,
             ),
             const SizedBox(height: 30),
             SizedBox(
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  if ([
-                    nome,
-                    cnpj,
-                    razao,
-                    email,
-                    telefone,
-                  ].any((field) => field.isEmpty)) {
+                onPressed: () async {
+                  if ([nome, cnpj, razao, email, telefone].any((field) => field.isEmpty)) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Preencha todos os campos')),
                     );
                     return;
                   }
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Fornecedor cadastrado com sucesso!'),
-                    ),
+                  await cadastrarFornecedor(
+                    context: context,
+                    nome: nome,
+                    cnpj: cnpj,
+                    razao: razao,
+                    email: email,
+                    telefone: telefone,
                   );
                 },
                 style: ElevatedButton.styleFrom(
