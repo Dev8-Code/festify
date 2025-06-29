@@ -19,15 +19,22 @@ class MyDrawer extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   children: [
                     ListTile(
+                      leading: const Icon(Icons.person),
+                      title: const Text('Clientes'),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/clients-list');
+                      },
+                    ),
+                    ListTile(
                       leading: const Icon(Icons.handshake),
-                      title: const Text('Fornecedor'),
+                      title: const Text('Fornecedores'),
                       onTap: () {
                         Navigator.pushNamed(context, '/supplier-list');
                       },
                     ),
                     ListTile(
                       leading: const Icon(Icons.person_add),
-                      title: const Text('Operador'),
+                      title: const Text('Operadores'),
                       onTap: () {
                         Navigator.pushNamed(context, '/operator-list');
                       },
