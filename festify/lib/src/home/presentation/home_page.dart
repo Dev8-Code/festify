@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
                   context: context,
                   icon: Icons.event,
                   label: 'Cadastrar Evento',
-                  onTap: () => Navigator.pushNamed(context, '/cadastro-evento'),
+                  onTap: () => Navigator.pushNamed(context, '/clients-list'),
                   isDarkMode: isDarkMode,
                 ),
                 const SizedBox(width: 24),
@@ -59,9 +59,10 @@ class HomePage extends StatelessWidget {
     required VoidCallback onTap,
     required bool isDarkMode,
   }) {
-    final cardColor = isDarkMode
-        ? Colors.white.withOpacity(0.1)
-        : Colors.black.withOpacity(0.05);
+    final cardColor =
+        isDarkMode
+            ? Colors.white.withOpacity(0.1)
+            : Colors.black.withOpacity(0.05);
     final iconColor = isDarkMode ? Colors.white : Colors.black;
 
     return GestureDetector(
