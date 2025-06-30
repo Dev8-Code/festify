@@ -13,9 +13,9 @@ class ContractMainPage extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(),
       endDrawer: const MyDrawer(),
-      body: Padding(
+      body: ListView(
         padding: EdgeInsets.all(16),
-        child: Center(
+        children: [Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -51,7 +51,7 @@ class ContractMainPage extends ConsumerWidget {
               ContractCard('Pendente de \ngeração'),
             ],
           ),
-        ),
+        )],
       ),
       bottomNavigationBar: CustomBottomNavBar(),
     );
@@ -144,10 +144,13 @@ class ContractCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CardBasicStructure(
-                  titleColor: Colors.white,
-                  subtitleColor: Color(0xFFD4D9E0),
+                Expanded(
+                  child: CardBasicStructure(
+                    titleColor: Colors.white,
+                    subtitleColor: Color(0xFFD4D9E0),
+                  ),
                 ),
+                SizedBox(width: 8),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,10 +158,9 @@ class ContractCard extends StatelessWidget {
                     Text('Status:'),
                     Text(
                       status,
-                      overflow: TextOverflow.clip,
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),

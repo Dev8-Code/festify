@@ -13,107 +13,109 @@ class ContractDetailsPage extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(),
       endDrawer: const MyDrawer(),
-      body: Padding(
+      body: ListView(
         padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Card(
-              color: Color(0xFFF0DBD1),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CardBasicStructure(
-                      titleColor: Colors.black,
-                      subtitleColor: Colors.black,
-                    ),
-                    SizedBox(height: 36),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFF1E1E1E),
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                      ),
-                      width: MediaQuery.of(context).size.width,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'Status: Gerado',
-                          style: TextStyle(
-                            color: Color(0xFFD4D9E0),
-                            fontSize: 15,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 24),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     ContractButtons(
-            //       icon: Icons.note_add,
-            //       text: 'Gerar \n contrato',
-            //     ),
-            //     ContractButtons(
-            //       icon: Icons.upload_file,
-            //       text: 'Upload de \n arquivos',
-            //     ),
-            //     ContractButtons(
-            //       icon: Icons.edit_document,
-            //       text: 'Assinar \n contrato',
-            //     ),
-            //   ],
-            // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                children: [
-                  ContractStepPending(),
-                  ContractStepGenerated(),
-                  ContractStepSignature(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Card(
+                color: Color(0xFFF0DBD1),
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Column(
-                        children: [
-                          Icon(
-                            Icons.circle_outlined,
-                            color: const Color.fromARGB(71, 255, 255, 255),
-                            size: 40,
-                          ),
-                        ],
+                      CardBasicStructure(
+                        titleColor: Colors.black,
+                        subtitleColor: Colors.black,
                       ),
-                      SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Assinado',
+                      SizedBox(height: 36),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFF1E1E1E),
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                        ),
+                        width: MediaQuery.of(context).size.width,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'Status: Gerado',
                             style: TextStyle(
-                              color: const Color.fromARGB(71, 255, 255, 255),
+                              color: Color(0xFFD4D9E0),
                               fontSize: 15,
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                      SizedBox(height: 120)
                     ],
-                  )
-                ],
+                  ),
+                ),
               ),
-            ),
-          ],
-        ),
+              SizedBox(height: 24),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     ContractButtons(
+              //       icon: Icons.note_add,
+              //       text: 'Gerar \n contrato',
+              //     ),
+              //     ContractButtons(
+              //       icon: Icons.upload_file,
+              //       text: 'Upload de \n arquivos',
+              //     ),
+              //     ContractButtons(
+              //       icon: Icons.edit_document,
+              //       text: 'Assinar \n contrato',
+              //     ),
+              //   ],
+              // ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: [
+                    ContractStepPending(),
+                    ContractStepGenerated(),
+                    ContractStepSignature(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Icon(
+                              Icons.circle_outlined,
+                              color: const Color.fromARGB(71, 255, 255, 255),
+                              size: 40,
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Assinado',
+                              style: TextStyle(
+                                color: const Color.fromARGB(71, 255, 255, 255),
+                                fontSize: 15,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 120)
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
       ),
       bottomNavigationBar: CustomBottomNavBar(),
     );
