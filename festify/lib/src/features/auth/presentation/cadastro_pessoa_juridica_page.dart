@@ -4,6 +4,7 @@ import '../providers/cadastro_pessoa_juridica_providers.dart';
 import '../../custom_app_bar.dart';
 import '../../custom_bottom_nav_bar.dart';
 import '../../custom_drawer.dart';
+import 'package:festify/src/features/auth/services/cadastracliente_service.dart';
 
 class CadastroPessoaJuridicaPage extends ConsumerWidget {
   const CadastroPessoaJuridicaPage({super.key});
@@ -13,7 +14,6 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white : Colors.black;
 
-
     final razaoSocial = ref.watch(razaoSocialProvider);
     final cnpj = ref.watch(cnpjProvider);
     final responsavel = ref.watch(responsavelProvider);
@@ -22,7 +22,7 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
     final isLoading = ref.watch(isLoadingCadastroJuridicoProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       endDrawer: const MyDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -51,67 +51,73 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
               child: SizedBox(
                 width: 500,
                 height: 50,
-                child: isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.yellow,
-                        ),
-                      )
-                    : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow[700],
-                          foregroundColor: const Color(0xFF121E30),
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.0),
+                child:
+                    isLoading
+                        ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.yellow,
                           ),
-                          textStyle: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        onPressed: () async {
-                          if ([
-                            razaoSocial,
-                            cnpj,
-                            responsavel,
-                            email,
-                            telefone,
-                          ].any((e) => e.isEmpty)) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Por favor, preencha todos os campos',
-                                ),
-                              ),
-                            );
-                            return;
-                          }
-
-                          ref
-                              .read(isLoadingCadastroJuridicoProvider.notifier)
-                              .state = true;
-                          await Future.delayed(const Duration(seconds: 2));
-                          ref
-                              .read(isLoadingCadastroJuridicoProvider.notifier)
-                              .state = false;
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Cadastro realizado com sucesso!',
-                              ),
+                        )
+                        : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow[700],
+                            foregroundColor: const Color(0xFF121E30),
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0),
                             ),
-                          );
-                        },
-                        child: const Text('Cadastrar'),
-                      ),
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          onPressed: () async {
+                            if ([
+                              razaoSocial,
+                              cnpj,
+                              responsavel,
+                              email,
+                              telefone,
+                            ].any((e) => e.isEmpty)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Por favor, preencha todos os campos',
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            ref
+                                .read(
+                                  isLoadingCadastroJuridicoProvider.notifier,
+                                )
+                                .state = true;
+
+                            await CadastraClienteService().cadastrarJuridica(
+                              context: context,
+                              razaoSocial: razaoSocial,
+                              cnpj: cnpj,
+                              responsavel: responsavel,
+                              email: email,
+                              telefone: telefone,
+                            );
+
+                            ref
+                                .read(
+                                  isLoadingCadastroJuridicoProvider.notifier,
+                                )
+                                .state = false;
+                          },
+                          child: const Text('Cadastrar'),
+                        ),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomNavBar(),
+      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 
@@ -120,7 +126,6 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
     WidgetRef ref,
     String label,
     StateProvider<String> provider,
-    
   ) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white : Colors.black;
@@ -136,12 +141,12 @@ class CadastroPessoaJuridicaPage extends ConsumerWidget {
           labelText: label,
           labelStyle: TextStyle(color: labelColor),
           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: borderColor),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: borderColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.amber, width: 2),           
+            borderSide: const BorderSide(color: Colors.amber, width: 2),
           ),
         ),
       ),

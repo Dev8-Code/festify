@@ -1,6 +1,6 @@
+import 'package:festify/src/features/supplier/services/supplier_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/supplier_model.dart';
 import '../providers/supplier_list_providers.dart';
 
 class SupplierListPage extends ConsumerStatefulWidget {
@@ -41,7 +41,6 @@ class _SupplierListPageState extends ConsumerState<SupplierListPage> {
           Expanded(
             child: suppliersAsync.when(
               data: (suppliers) {
-                // Filtrar fornecedores baseado na pesquisa
                 final filteredSuppliers =
                     suppliers.where((supplier) {
                       if (searchQuery.isEmpty) return true;
@@ -67,47 +66,119 @@ class _SupplierListPageState extends ConsumerState<SupplierListPage> {
                 }
 
                 return ListView.builder(
-                  // Permitir scroll para baixo
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: filteredSuppliers.length,
                   itemBuilder: (context, index) {
                     final supplier = filteredSuppliers[index];
-
-                    // Pegar primeira letra do nome do fornecedor
                     final firstLetter =
                         supplier.nomeFornecedor.isNotEmpty
                             ? supplier.nomeFornecedor[0].toUpperCase()
                             : '?';
 
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.amber,
-                          child: Text(
-                            firstLetter,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                    return Dismissible(
+                      key: Key(supplier.idFornecedor.toString()),
+                      direction: DismissDirection.endToStart,
+                      background: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 12,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            color: Colors.red,
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                        title: Text(supplier.nomeFornecedor),
-                        subtitle: Text(
-                          '${supplier.razaoSocialFornecedor}\n${supplier.cnpjFornecedor}',
-                          style: const TextStyle(fontSize: 13),
+                      ),
+                      confirmDismiss: (direction) async {
+                        return await showDialog<bool>(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar exclusão'),
+                              content: Text(
+                                'Deseja excluir "${supplier.nomeFornecedor}"?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                  ),
+                                  onPressed:
+                                      () => Navigator.of(context).pop(true),
+                                  child: const Text('Excluir'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (_) async {
+                        await deleteFornecedor(
+                          context: context,
+                          idFornecedor: supplier.idFornecedor,
+                        );
+
+                        try {
+                          await ref
+                              .read(supplierListProvider.notifier)
+                              .deleteSupplier(supplier.idFornecedor);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Fornecedor "${supplier.nomeFornecedor}" excluído.',
+                              ),
+                            ),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Erro ao excluir fornecedor: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
                         ),
-                        isThreeLine: true,
-                        trailing: const Icon(
-                          Icons.person_outline,
-                        ), // Ícone de usuário
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.amber,
+                            child: Text(
+                              firstLetter,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          title: Text(supplier.nomeFornecedor),
+                          subtitle: Text(
+                            '${supplier.razaoSocialFornecedor}\n${supplier.cnpjFornecedor}',
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          isThreeLine: true,
+                          trailing: const Icon(Icons.person_outline),
+                        ),
                       ),
                     );
                   },
