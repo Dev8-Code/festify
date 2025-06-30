@@ -19,7 +19,8 @@ class Operator {
 
   factory Operator.fromMap(Map<String, dynamic> map) {
     return Operator(
-      idUsuario: map['id_usuario'] ?? '',
+      idUsuario:
+          map['id_usuario']?.toString() ?? '', // Garantir que seja String
       nomeRazaoSocial: map['nome_razao_social'] ?? '',
       emailUsuario: map['email_usuario'] ?? '',
       cpfUsuario: map['cpf_usuario'] ?? '',

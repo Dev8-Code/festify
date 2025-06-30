@@ -1,3 +1,4 @@
+import 'package:festify/src/features/supplier/services/supplier_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/supplier_list_providers.dart';
@@ -124,6 +125,11 @@ class _SupplierListPageState extends ConsumerState<SupplierListPage> {
                         );
                       },
                       onDismissed: (_) async {
+                        await deleteFornecedor(
+                          context: context,
+                          idFornecedor: supplier.idFornecedor,
+                        );
+
                         try {
                           await ref
                               .read(supplierListProvider.notifier)

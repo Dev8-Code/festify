@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:festify/src/features/clientes/services/client_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../custom_app_bar.dart';
@@ -6,6 +7,7 @@ import '../../custom_bottom_nav_bar.dart';
 import '../../custom_drawer.dart';
 import '../models/client_model.dart';
 import '../providers/client_list_providers.dart';
+import '../services/client_service.dart';
 
 class ClientListPage extends ConsumerStatefulWidget {
   const ClientListPage({super.key});
@@ -174,6 +176,11 @@ class _ClientListPageState extends ConsumerState<ClientListPage> {
                                   (_) =>
                                       _confirmDeleteDialog(context, nomeFinal),
                               onDismissed: (_) async {
+                                await deleteClient(
+                                  context: context,
+                                  idCliente: client.idCliente,
+                                );
+
                                 await ref
                                     .read(clientListProvider.notifier)
                                     .deleteClient(client.idCliente);

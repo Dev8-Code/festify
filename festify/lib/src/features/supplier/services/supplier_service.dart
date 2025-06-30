@@ -10,7 +10,6 @@ Future<void> cadastrarFornecedor({
   required String telefone,
 }) async {
   try {
-
     await Supabase.instance.client.from('fornecedores').insert({
       'nome_fornecedor': nome,
       'cnpj_fornecedor': cnpj,
@@ -23,8 +22,28 @@ Future<void> cadastrarFornecedor({
       const SnackBar(content: Text('Fornecedor cadastrado com sucesso!')),
     );
   } catch (e) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Erro ao cadastrar: $e')));
+  }
+}
+
+Future<void> deleteFornecedor({
+  required BuildContext context,
+  required int idFornecedor,
+}) async {
+  try {
+    await Supabase.instance.client
+        .from('fornecedores')
+        .delete()
+        .eq('id_fornecedor', idFornecedor);
+
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Erro ao cadastrar: $e')),
+      const SnackBar(content: Text('Fornecedor excluído com sucesso!')),
     );
+  } catch (e) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Erro ao excluir fornecedor: $e')));
   }
 }

@@ -10,12 +10,26 @@ Future<String> registerOperator({
   required String senha,
 }) async {
   try {
-    await Supabase.instance.client.from('usuarios').insert({
+    final supabase = Supabase.instance.client;
+
+    // Cria o usuário na auth.users
+    final AuthResponse authResponse = await supabase.auth.signUp(
+      email: email,
+      password: senha,
+    );
+
+    if (authResponse.user == null) {
+      throw Exception('Falha ao criar usuário na autenticação');
+    }
+
+    // Depois, insere os dados adicionais na tabela usuarios
+    // usando o ID do usuário criado no auth.users
+    await supabase.from('usuarios').insert({
+      'id_usuario': authResponse.user!.id,
       'nome_razao_social': nome,
       'cpf_usuario': cpf,
       'email_usuario': email,
       'telefone_usuario': telefone,
-      'senha_usuario': senha,
       'permissao_usuario': 'operador',
       'status_usuario': 'ativo',
     });
@@ -25,11 +39,54 @@ Future<String> registerOperator({
     );
 
     return 'success';
-  } catch (e) {
+  } on AuthException catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Erro ao cadastrar: $e')),
+      SnackBar(content: Text('Erro de autenticação: ${e.message}')),
+    );
+    return 'error';
+  } catch (e) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Erro ao cadastrar: $e')));
+    return 'error';
+  }
+}
+
+Future<String> deleteOperator({
+  required BuildContext context,
+  required String idOperador,
+}) async {
+  try {
+    final supabase = Supabase.instance.client;
+
+    // remove da tabela usuarios
+    await supabase.from('usuarios').delete().eq('id_usuario', idOperador);
+
+    // Depois, remove o usuário do auth.users
+    // Nota: Só admin pode deletar outros usuários do auth.users
+    // Se você não tem permissões de admin, pode apenas desativar o usuário
+    try {
+      await supabase.auth.admin.deleteUser(idOperador);
+    } catch (e) {
+      await supabase
+          .from('usuarios')
+          .update({'status_usuario': 'inativo'})
+          .eq('id_usuario', idOperador);
+
+      print(
+        'Não foi possível deletar do auth.users, usuário marcado como inativo',
+      );
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Operador excluído com sucesso!')),
     );
 
+    return 'success';
+  } catch (e) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Erro ao excluir operador: $e')));
     return 'error';
   }
 }

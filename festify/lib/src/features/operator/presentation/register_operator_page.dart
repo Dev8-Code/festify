@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:festify/src/features/custom_app_bar.dart';
 import 'package:festify/src/features/custom_bottom_nav_bar.dart';
 import 'package:festify/src/features/operator/providers/register_operator_providers.dart';
+import 'package:festify/src/features/operator/providers/operator_list_providers.dart';
 import 'package:festify/src/features/operator/services/operator_service.dart';
 
 class RegisterOperatorPage extends ConsumerWidget {
@@ -111,19 +112,41 @@ class RegisterOperatorPage extends ConsumerWidget {
               height: 50,
               child: ElevatedButton(
                 onPressed: () async {
-                  if ([nome, cpf, email, telefone, senha, repetirSenha,].any((field) => field.isEmpty)) {
+                  // Validações
+                  if ([
+                    nome,
+                    cpf,
+                    email,
+                    telefone,
+                    senha,
+                    repetirSenha,
+                  ].any((field) => field.isEmpty)) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Preencha todos os campos')),
                     );
                     return;
                   }
+
                   if (senha != repetirSenha) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('As senhas não coincidem')),
                     );
+                    return;
                   }
 
-                  await registerOperator(
+                  if (senha.length < 6) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'A senha deve ter pelo menos 6 caracteres',
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+
+                  // Cadastrar operador
+                  final result = await registerOperator(
                     context: context,
                     nome: nome,
                     cpf: cpf,
@@ -131,6 +154,24 @@ class RegisterOperatorPage extends ConsumerWidget {
                     telefone: telefone,
                     senha: senha,
                   );
+
+                  if (result == 'success') {
+                    // Limpar os campos
+                    ref.read(nomeOperadorProvider.notifier).state = '';
+                    ref.read(cpfOperadorProvider.notifier).state = '';
+                    ref.read(emailOperadorProvider.notifier).state = '';
+                    ref.read(telefoneOperadorProvider.notifier).state = '';
+                    ref.read(senhaOperadorProvider.notifier).state = '';
+                    ref.read(repetirSenhaOperadorProvider.notifier).state = '';
+
+                    // Recarregar a lista de operadores
+                    await ref.read(operatorListProvider.notifier).refresh();
+
+                    // Voltar para a página anterior
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: buttonColor,
@@ -140,7 +181,7 @@ class RegisterOperatorPage extends ConsumerWidget {
                   ),
                 ),
                 child: const Text(
-                  'Enviar',
+                  'Cadastrar Operador',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -235,9 +276,5 @@ class RegisterOperatorPage extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _showMessage(BuildContext context, String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 }
