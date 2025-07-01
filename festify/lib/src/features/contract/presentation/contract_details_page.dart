@@ -4,126 +4,163 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../custom_app_bar.dart';
 import '../../custom_bottom_nav_bar.dart';
 import '../../card_basic_structure.dart';
+import '../providers/contract_providers.dart';
+import '../services/contract_service.dart';
 
 class ContractDetailsPage extends ConsumerWidget {
   const ContractDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selectedContractAsync = ref.watch(selectedContractProvider);
+
     return Scaffold(
       appBar: CustomAppBar(),
       endDrawer: const MyDrawer(),
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Card(
-              color: Color(0xFFF0DBD1),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CardBasicStructure(
-                      titleColor: Colors.black,
-                      subtitleColor: Colors.black,
-                    ),
-                    SizedBox(height: 36),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFF1E1E1E),
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                      ),
-                      width: MediaQuery.of(context).size.width,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'Status: Gerado',
-                          style: TextStyle(
-                            color: Color(0xFFD4D9E0),
-                            fontSize: 15,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+      body: selectedContractAsync.when(
+        data: (contract) {
+          if (contract == null) {
+            return Center(
+              child: Text(
+                'Contrato não encontrado',
+                style: TextStyle(color: Colors.white),
               ),
-            ),
-            SizedBox(height: 24),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     ContractButtons(
-            //       icon: Icons.note_add,
-            //       text: 'Gerar \n contrato',
-            //     ),
-            //     ContractButtons(
-            //       icon: Icons.upload_file,
-            //       text: 'Upload de \n arquivos',
-            //     ),
-            //     ContractButtons(
-            //       icon: Icons.edit_document,
-            //       text: 'Assinar \n contrato',
-            //     ),
-            //   ],
-            // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
+            );
+          }
+
+          final status = contract['status_evento'] ?? '';
+          final nomeCliente =
+              contract['clientes']?['nome_razao_social'] ??
+              'Cliente não encontrado';
+          final dataEvento = ContractService.formatarData(
+            contract['data_evento'] ?? '',
+          );
+          final tipoEvento = contract['tipo_evento'] ?? '';
+          final nomeBeneficiario =
+              contract['nome_beneficiario_pagador_evento'] ?? '';
+
+          return ListView(
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  ContractStepPending(),
-                  ContractStepGenerated(),
-                  ContractStepSignature(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
+                  Card(
+                    color: Color(0xFFF0DBD1),
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.circle_outlined,
-                            color: const Color.fromARGB(71, 255, 255, 255),
-                            size: 40,
+                          // Informações do contrato
+                          Container(
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  tipoEvento,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Cliente: $nomeCliente',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 16,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                ),
+                                if (nomeBeneficiario.isNotEmpty) ...[
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'Beneficiário: $nomeBeneficiario',
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 16,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
+                                ],
+                                SizedBox(height: 4),
+                                Text(
+                                  'Data do Evento: $dataEvento',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 16,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                      SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Assinado',
-                            style: TextStyle(
-                              color: const Color.fromARGB(71, 255, 255, 255),
-                              fontSize: 15,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w500,
+                          SizedBox(height: 36),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xFF1E1E1E),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                'Status: ${ContractService.traduzirStatus(status)}',
+                                style: TextStyle(
+                                  color: Color(0xFFD4D9E0),
+                                  fontSize: 15,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 120)
-                    ],
-                  )
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      children: [
+                        ContractStepPending(statusEvento: status),
+                        ContractStepGenerated(statusEvento: status),
+                        ContractStepSignature(statusEvento: status),
+                        ContractStepSigned(statusEvento: status),
+                      ],
+                    ),
+                  ),
                 ],
               ),
+            ],
+          );
+        },
+        loading: () => Center(child: CircularProgressIndicator()),
+        error:
+            (error, stack) => Center(
+              child: Text(
+                'Erro ao carregar contrato: $error',
+                style: TextStyle(color: Colors.red),
+              ),
             ),
-          ],
-        ),
       ),
       bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 }
 
-class ContractStepSignature extends StatelessWidget {
-  const ContractStepSignature({
-    super.key,
-  });
+class ContractStepSigned extends StatelessWidget {
+  final String statusEvento;
+
+  const ContractStepSigned({super.key, required this.statusEvento});
 
   @override
   Widget build(BuildContext context) {
@@ -132,17 +169,48 @@ class ContractStepSignature extends StatelessWidget {
       children: [
         Column(
           children: [
-            Icon(
-              Icons.circle_outlined,
-              color: const Color.fromARGB(71, 255, 255, 255),
-              size: 40,
+            Icon(Icons.circle_outlined, color: Colors.amber, size: 40),
+          ],
+        ),
+        SizedBox(width: 12),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Assinado',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w500,
+              ),
             ),
+          ],
+        ),
+        SizedBox(height: 120),
+      ],
+    );
+  }
+}
+
+class ContractStepSignature extends StatelessWidget {
+  final String statusEvento;
+
+  const ContractStepSignature({super.key, required this.statusEvento});
+
+  @override
+  Widget build(BuildContext context) {
+    final isActive = statusEvento.toLowerCase() == 'pendente_assinatura';
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            Icon(Icons.circle_outlined, color: Colors.amber, size: 40),
             SizedBox(height: 4),
-            Container( // linha vertical
-              width: 2,
-              height: 60,
-              color: const Color.fromARGB(71, 255, 255, 255),
-            ),
+            Container(width: 2, height: 60, color: Colors.amber),
           ],
         ),
         SizedBox(width: 12),
@@ -153,7 +221,7 @@ class ContractStepSignature extends StatelessWidget {
             Text(
               'Pendente de assinatura',
               style: TextStyle(
-                color: const Color.fromARGB(71, 255, 255, 255),
+                color: Colors.white,
                 fontSize: 15,
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.w500,
@@ -161,7 +229,7 @@ class ContractStepSignature extends StatelessWidget {
             ),
             SizedBox(height: 20),
             SizedBox(
-              height: 80, // altura do botão, ajuste se necessário
+              height: 80,
               width: MediaQuery.of(context).size.width * 0.6,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -170,10 +238,12 @@ class ContractStepSignature extends StatelessWidget {
                     ContractButtons(
                       icon: Icons.upload_file,
                       text: 'Upload de arquivos',
+                      isEnabled: isActive,
                     ),
                     ContractButtons(
                       icon: Icons.note_alt,
                       text: 'Assinar contrato',
+                      isEnabled: isActive,
                     ),
                   ],
                 ),
@@ -181,35 +251,33 @@ class ContractStepSignature extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 120)
+        SizedBox(height: 120),
       ],
     );
   }
 }
 
 class ContractStepGenerated extends StatelessWidget {
-  const ContractStepGenerated({
-    super.key,
-  });
+  final String statusEvento;
+
+  const ContractStepGenerated({super.key, required this.statusEvento});
 
   @override
   Widget build(BuildContext context) {
+    final isActive = statusEvento.toLowerCase() == 'gerado';
+    final isPassed = [
+      'pendente_assinatura',
+      'assinado',
+    ].contains(statusEvento.toLowerCase());
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
           children: [
-            Icon(
-              Icons.edit_rounded,
-              color: Colors.white,
-              size: 40,
-            ),
+            Icon(Icons.edit_rounded, color: Colors.amber, size: 40),
             SizedBox(height: 4),
-            Container( // linha vertical
-              width: 2,
-              height: 60,
-              color: Colors.white,
-            ),
+            Container(width: 2, height: 60, color: Colors.amber),
           ],
         ),
         SizedBox(width: 12),
@@ -230,38 +298,33 @@ class ContractStepGenerated extends StatelessWidget {
             ContractButtons(
               icon: Icons.download,
               text: 'Baixar contrato',
+              isEnabled: isActive || isPassed,
             ),
           ],
         ),
-        SizedBox(height: 120)
+        SizedBox(height: 120),
       ],
     );
   }
 }
 
 class ContractStepPending extends StatelessWidget {
-  const ContractStepPending({
-    super.key,
-  });
+  final String statusEvento;
+
+  const ContractStepPending({super.key, required this.statusEvento});
 
   @override
   Widget build(BuildContext context) {
+    final isActive = statusEvento.toLowerCase() == 'pendente';
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
           children: [
-            Icon(
-              Icons.check_rounded,
-              color: Colors.amber,
-              size: 50,
-            ),
+            Icon(Icons.check_rounded, color: Colors.amber, size: 50),
             SizedBox(height: 4),
-            Container(
-              width: 2,
-              height: 60,
-              color: Colors.amber,
-            ),
+            Container(width: 2, height: 60, color: Colors.amber),
           ],
         ),
         SizedBox(width: 12),
@@ -272,7 +335,7 @@ class ContractStepPending extends StatelessWidget {
             Text(
               'Pendente de geração',
               style: TextStyle(
-                color: Colors.amber,
+                color: Colors.white,
                 fontSize: 15,
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.w500,
@@ -282,10 +345,11 @@ class ContractStepPending extends StatelessWidget {
             ContractButtons(
               icon: Icons.note_add,
               text: 'Gerar contrato',
+              isEnabled: isActive,
             ),
           ],
         ),
-        SizedBox(height: 120)
+        SizedBox(height: 120),
       ],
     );
   }
@@ -294,14 +358,26 @@ class ContractStepPending extends StatelessWidget {
 class ContractButtons extends StatelessWidget {
   final IconData icon;
   final String text;
+  final bool isEnabled;
 
-  const ContractButtons({super.key, required this.icon, required this.text});
+  const ContractButtons({
+    super.key,
+    required this.icon,
+    required this.text,
+    this.isEnabled = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed:
+            isEnabled
+                ? () {
+                  // TODO: Implementar ações dos botões
+                  print('Botão pressionado: $text');
+                }
+                : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color.fromARGB(255, 30, 30, 30),
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
@@ -317,7 +393,10 @@ class ContractButtons extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: const Color.fromARGB(71, 255, 255, 255),
+              color:
+                  isEnabled
+                      ? Colors.white
+                      : const Color.fromARGB(71, 255, 255, 255),
             ),
             SizedBox(width: 10),
             Text(
@@ -325,7 +404,10 @@ class ContractButtons extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: const Color.fromARGB(71, 255, 255, 255),
+                color:
+                    isEnabled
+                        ? Colors.white
+                        : const Color.fromRGBO(71, 255, 255, 255),
               ),
               textAlign: TextAlign.center,
             ),
