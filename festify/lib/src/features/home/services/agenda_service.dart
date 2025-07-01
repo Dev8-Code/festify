@@ -21,7 +21,7 @@ class AgendaService {
   final response = await _client
       .from('agendas')
       .select('data_bloq_agenda')
-      .eq('id_evento', 9999999); // Só busca bloqueios manuais
+      .eq('id_evento', 9999999); 
 
   return (response as List).map<DateTime>((item) {
     final data = DateTime.parse(item['data_bloq_agenda']);

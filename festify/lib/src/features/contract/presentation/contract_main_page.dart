@@ -23,7 +23,6 @@ class _ContractMainPageState extends ConsumerState<ContractMainPage> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     final textColor = isDarkMode ? Colors.white : Colors.black;
-    final subtitleColor = isDarkMode ? Colors.white70 : Colors.black54;
 
     final filteredContracts =
         contracts.where((contract) {

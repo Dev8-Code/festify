@@ -7,7 +7,6 @@ import '../../custom_bottom_nav_bar.dart';
 import '../../custom_drawer.dart';
 import '../models/client_model.dart';
 import '../providers/client_list_providers.dart';
-import '../services/client_service.dart';
 
 class ClientListPage extends ConsumerStatefulWidget {
   const ClientListPage({super.key});

@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import '../../custom_app_bar.dart';
 import '../../custom_bottom_nav_bar.dart';
 import '../../custom_drawer.dart';
-import '../viewmodels/bloqueios_manuais_provider.dart';
-import '../viewmodels/datas_eventos_provider.dart'; 
+import '../providers/bloqueios_manuais_provider.dart';
+import '../providers/datas_eventos_provider.dart'; 
 import 'agenda_visualizacao.dart';
 
 class AgendaBloqueioDatasPage extends ConsumerStatefulWidget {
@@ -50,7 +50,6 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
   @override
   Widget build(BuildContext context) {
     final bloqueios = ref.watch(bloqueiosManuaisProvider);
-    // Watch the AsyncValue<List<Event>> from datasEventosProvider
     final eventsAsync = ref.watch(datasEventosProvider);
 
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -98,7 +97,6 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Erro ao carregar eventos: $err')),
               data: (events) {
-                // Filter events to get just the dates that have events for calendar marking
                 final eventDates = events.map((e) => e.eventDate).toList();
 
                 return TableCalendar(
@@ -113,7 +111,6 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
                       _controller.text = formatter.format(selected);
                     });
 
-                    // --- NEW LOGIC: Navigate to event details if an event exists on the selected day ---
                     final eventOnSelectedDay = events.firstWhereOrNull(
                       (e) => isSameDay(e.eventDate, selected),
                     );
@@ -175,7 +172,7 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
                         return Container(
                           margin: const EdgeInsets.all(6.0),
                           decoration: BoxDecoration(
-                            color: Colors.blueAccent, // Color for event days
+                            color: Colors.blueAccent, 
                             shape: BoxShape.circle,
                           ),
                           alignment: Alignment.center,
@@ -256,7 +253,6 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
   }
 }
 
-// Extension to easily find an element or return null
 extension IterableExtension<T> on Iterable<T> {
   T? firstWhereOrNull(bool Function(T element) test) {
     for (var element in this) {

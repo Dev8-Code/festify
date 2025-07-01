@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../custom_app_bar.dart';
 import '../../custom_bottom_nav_bar.dart';
-import '../../card_basic_structure.dart';
 import '../providers/contract_providers.dart';
 import '../services/contract_service.dart';
 

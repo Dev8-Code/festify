@@ -8,7 +8,6 @@ class EventAgendaService {
     try {
       final response = await _supabase
           .from('eventos')
-          // Change 'nome_cliente' to 'nome_razao_social' here
           .select('*, clientes(nome_razao_social), locais(endereco_local)')
           .order('data_evento', ascending: true);
 
@@ -27,7 +26,6 @@ class EventAgendaService {
     try {
       final response = await _supabase
           .from('eventos')
-          // Change 'nome_cliente' to 'nome_razao_social' here
           .select('*, clientes(nome_razao_social), locais(endereco_local)')
           .eq('id_evento', eventId)
           .single();
