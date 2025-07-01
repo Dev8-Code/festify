@@ -49,12 +49,7 @@ class AgendaVisualizacaoPage extends StatelessWidget {
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      'assets/evento.jpg',
-                      fit: BoxFit.cover,
-                      height: 150,
-                      width: double.infinity,
-                    ),
+                   
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12.0),
