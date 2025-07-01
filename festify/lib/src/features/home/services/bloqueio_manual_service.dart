@@ -4,13 +4,20 @@ class BloqueioManualService {
   final _client = Supabase.instance.client;
 
   Future<void> bloquearData(DateTime data, {String? motivo}) async {
-    final dia = DateTime(data.year, data.month, data.day);
+  final dia = DateTime(data.year, data.month, data.day);
+  try {
     await _client.from('bloqueios_manuais').insert({
       'data_bloqueio': dia.toIso8601String(),
       'motivo': motivo,
       'tipo': 'manual',
     });
+    print('DEBUG: Data bloqueada com sucesso: $dia');
+  } catch (e) {
+    print('ERRO ao bloquear data: $e');
+    // Opcional: relançar a exceção ou tratar de forma mais robusta
+    throw Exception('Falha ao bloquear data: $e');
   }
+}
 
   Future<void> desbloquearData(DateTime data) async {
     final dia = DateTime(data.year, data.month, data.day);
@@ -29,5 +36,16 @@ class BloqueioManualService {
       final data = DateTime.parse(item['data_bloqueio']);
       return DateTime(data.year, data.month, data.day);
     }).toList();
+  }
+
+  Future<bool> dataEhDeEvento(DateTime data) async {
+    final dia = DateTime(data.year, data.month, data.day);
+
+    final response = await _client
+        .from('eventos')
+        .select('data_evento')
+        .eq('data_evento', dia.toIso8601String());
+
+    return response.isNotEmpty;
   }
 }

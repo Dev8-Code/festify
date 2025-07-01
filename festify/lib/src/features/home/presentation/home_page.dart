@@ -113,7 +113,7 @@ class HomePage extends StatelessWidget {
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 48),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(50),
                     ),
                   ),
                   onPressed: () {
@@ -129,7 +129,7 @@ class HomePage extends StatelessWidget {
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 48),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(50),
                     ),
                   ),
                   onPressed: () {

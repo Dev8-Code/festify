@@ -1,6 +1,8 @@
 import 'package:festify/src/features/supplier/services/supplier_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../custom_app_bar.dart';
+import '../../custom_drawer.dart';
 import '../providers/supplier_list_providers.dart';
 
 class SupplierListPage extends ConsumerStatefulWidget {
@@ -18,7 +20,8 @@ class _SupplierListPageState extends ConsumerState<SupplierListPage> {
     final suppliersAsync = ref.watch(supplierListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Fornecedores'), centerTitle: true),
+            appBar: const CustomAppBar(),
+            endDrawer: const MyDrawer(),
       body: Column(
         children: [
           Padding(

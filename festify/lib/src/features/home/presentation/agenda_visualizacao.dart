@@ -98,16 +98,7 @@ class AgendaVisualizacaoPage extends ConsumerWidget {
                             color: mutedTextColor, 
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            'assets/evento.jpg', 
-                            fit: BoxFit.cover,
-                            height: 180,
-                            width: double.infinity,
-                          ),
-                        ),
+                      
                         const SizedBox(height: 16),
                         Text(
                           event.eventAddress ?? 'Endereço não disponível',
@@ -140,14 +131,7 @@ class AgendaVisualizacaoPage extends ConsumerWidget {
                             fontSize: 15,
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                          style: TextStyle(
-                            color: colorScheme.onSurface.withOpacity(0.8), // Text color with a bit less opacity
-                            fontSize: 14,
-                          ),
-                        ),
+                        
                         const SizedBox(height: 24),
                         Align(
                           alignment: Alignment.centerRight,

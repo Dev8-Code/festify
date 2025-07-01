@@ -198,7 +198,7 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
+                        backgroundColor: Colors.red,
                         foregroundColor: const Color(0xFF121212),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.0),
@@ -224,7 +224,7 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD4AF37),
+                        backgroundColor: const Color.fromARGB(255, 240, 198, 62),
                         foregroundColor: const Color(0xFF121212),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.0),
