@@ -46,7 +46,7 @@ class ContractDetailsPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Card(
-                    color: Color(0xFFF0DBD1),
+                    color: Color.fromARGB(255, 229, 225, 225),
                     child: Padding(
                       padding: EdgeInsets.all(16),
                       child: Column(
@@ -113,7 +113,7 @@ class ContractDetailsPage extends ConsumerWidget {
                               child: Text(
                                 'Status: ${ContractService.traduzirStatus(status)}',
                                 style: TextStyle(
-                                  color: Color(0xFFD4D9E0),
+                                  color: Color.fromARGB(255, 229, 225, 225),
                                   fontSize: 15,
                                   fontFamily: 'Roboto',
                                   fontWeight: FontWeight.w500,
