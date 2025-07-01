@@ -7,7 +7,8 @@ import '../../custom_app_bar.dart';
 import '../../custom_bottom_nav_bar.dart';
 import '../../custom_drawer.dart';
 import '../providers/bloqueios_manuais_provider.dart';
-import '../providers/datas_eventos_provider.dart'; 
+import '../providers/datas_eventos_provider.dart';
+import '../models/event_agenda_model.dart';
 import 'agenda_visualizacao.dart';
 
 class AgendaBloqueioDatasPage extends ConsumerStatefulWidget {
@@ -33,7 +34,9 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
         setState(() {
           selectedDate = parsedDate;
         });
-      } catch (_) {}
+      } catch (_) {
+        // Ignora erros de parsing durante a digitação
+      }
     });
   }
 
@@ -47,159 +50,217 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
+  Set<DateTime> _getSetupTeardownDates(List<Event> events) {
+    final Set<DateTime> setupTeardownDates = {};
+    for (var event in events) {
+      // Dias de Montagem
+      if (event.setupDays != null && event.setupDays! > 0) {
+        for (int i = 1; i <= event.setupDays!; i++) {
+          final setupDate = event.eventDate.subtract(Duration(days: i));
+          setupTeardownDates.add(DateTime(setupDate.year, setupDate.month, setupDate.day));
+        }
+      }
+      // Dias de Desmontagem
+      if (event.teardownDays != null && event.teardownDays! > 0) {
+        for (int i = 1; i <= event.teardownDays!; i++) {
+          final teardownDate = event.eventDate.add(Duration(days: i));
+          setupTeardownDates.add(DateTime(teardownDate.year, teardownDate.month, teardownDate.day));
+        }
+      }
+    }
+    return setupTeardownDates;
+  }
+
   @override
   Widget build(BuildContext context) {
     final bloqueios = ref.watch(bloqueiosManuaisProvider);
-    final eventsAsync = ref.watch(datasEventosProvider);
+    final asyncEvents = ref.watch(datasEventosProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDarkMode ? Colors.white : Colors.black;
-    final hintColor = isDarkMode ? Colors.white54 : Colors.black54;
-    final borderColor = isDarkMode ? Colors.amber : Colors.deepOrange;
+    Set<DateTime> eventDates = {};
+    Set<DateTime> setupTeardownDates = {};
+    List<Event> allEvents = []; // Para ter acesso à lista completa de eventos
+
+    asyncEvents.whenOrNull(
+      data: (events) {
+        allEvents = events; // Armazena todos os eventos
+        eventDates = events.map((e) => DateTime(e.eventDate.year, e.eventDate.month, e.eventDate.day)).toSet();
+        setupTeardownDates = _getSetupTeardownDates(events);
+      },
+    );
 
     return Scaffold(
       appBar: const CustomAppBar(),
-      endDrawer: const MyDrawer(),
       bottomNavigationBar: const CustomBottomNavBar(),
+      endDrawer: const MyDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Selecione a data para bloqueio:',
-                style: TextStyle(color: Colors.amber, fontSize: 16),
-              ),
-            ),
-            const SizedBox(height: 16),
             TextField(
               controller: _controller,
-              keyboardType: TextInputType.datetime,
-              style: TextStyle(color: textColor),
+              readOnly: true,
               decoration: InputDecoration(
-                hintText: 'DD/MM/AAAA',
-                hintStyle: TextStyle(color: hintColor),
-                filled: true,
-                fillColor: isDarkMode ? Colors.white12 : Colors.grey[200],
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: borderColor),
-                  borderRadius: BorderRadius.circular(8),
+                labelText: 'Data Selecionada',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: borderColor, width: 2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                prefixIcon: const Icon(Icons.calendar_today),
               ),
+              onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+                if (picked != null && picked != selectedDate) {
+                  setState(() {
+                    selectedDate = picked;
+                    _controller.text = formatter.format(selectedDate);
+                  });
+                }
+              },
             ),
             const SizedBox(height: 16),
-            eventsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Erro ao carregar eventos: $err')),
+            asyncEvents.when(
               data: (events) {
-                final eventDates = events.map((e) => e.eventDate).toList();
-
                 return TableCalendar(
-                  locale: 'pt_BR',
-                  firstDay: DateTime.utc(2020, 1, 1),
-                  lastDay: DateTime.utc(2030, 12, 31),
+                  firstDay: DateTime.utc(2000, 1, 1),
+                  lastDay: DateTime.utc(2100, 12, 31),
                   focusedDay: selectedDate,
                   selectedDayPredicate: (day) => isSameDay(selectedDate, day),
-                  onDaySelected: (selected, focused) {
+                  // >>> MODIFICAÇÃO PRINCIPAL AQUI: Lógica de navegação <<<
+                  onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
-                      selectedDate = selected;
-                      _controller.text = formatter.format(selected);
+                      selectedDate = selectedDay;
+                      _controller.text = formatter.format(selectedDate);
                     });
 
-                    final eventOnSelectedDay = events.firstWhereOrNull(
-                      (e) => isSameDay(e.eventDate, selected),
+                    // Verifica se o dia selecionado é uma data de evento
+                    final eventForSelectedDay = allEvents.firstWhereOrNull(
+                      (event) => isSameDay(event.eventDate, selectedDay),
                     );
 
-                    if (eventOnSelectedDay != null) {
+                    if (eventForSelectedDay != null) {
+                      // Se encontrou um evento, navega para a página de visualização
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AgendaVisualizacaoPage(
-                            eventId: eventOnSelectedDay.id,
-                          ),
+                          builder: (context) => AgendaVisualizacaoPage(eventId: eventForSelectedDay.id),
                         ),
                       );
                     }
                   },
+                  // <<< FIM DA MODIFICAÇÃO PRINCIPAL >>>
+                  calendarFormat: CalendarFormat.month,
+                  locale: 'pt_BR',
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                    titleTextStyle: TextStyle(color: Colors.amber, fontSize: 18.0),
+                    leftChevronIcon: Icon(Icons.chevron_left, color: Colors.amber),
+                    rightChevronIcon: Icon(Icons.chevron_right, color: Colors.amber),
+                  ),
+                  daysOfWeekStyle: DaysOfWeekStyle(
+                    weekdayStyle: const TextStyle(color: Colors.amber),
+                    weekendStyle: const TextStyle(color: Colors.yellow),
+                  ),
                   calendarStyle: CalendarStyle(
+                    defaultTextStyle: TextStyle(color: colorScheme.onSurface),
+                    weekendTextStyle: TextStyle(color: colorScheme.error),
+                    outsideTextStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.5)),
                     todayDecoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: Colors.amberAccent,
                       shape: BoxShape.circle,
                     ),
                     selectedDecoration: BoxDecoration(
-                      color: const Color(0xFFFFD700),
+                      color: Colors.amber,
                       shape: BoxShape.circle,
                     ),
-                    defaultTextStyle: TextStyle(color: textColor),
-                    weekendTextStyle: TextStyle(color: textColor.withOpacity(0.7)),
-                  ),
-                  headerStyle: HeaderStyle(
-                    titleTextStyle: TextStyle(color: textColor),
-                    formatButtonVisible: false,
-                    leftChevronIcon: Icon(Icons.chevron_left, color: textColor),
-                    rightChevronIcon: Icon(Icons.chevron_right, color: textColor),
-                  ),
-                  daysOfWeekStyle: DaysOfWeekStyle(
-                    weekdayStyle: TextStyle(color: Colors.amber),
-                    weekendStyle: TextStyle(color: Colors.amber),
                   ),
                   calendarBuilders: CalendarBuilders(
-                    defaultBuilder: (context, day, focusedDay) {
-                      final isBloqueado = bloqueios.any((d) => isSameDay(d, day));
-                      final isEvento = eventDates.any((d) => isSameDay(d, day)); // Use eventDates
+                    defaultBuilder: (context, date, _) {
+                      final day = DateTime(date.year, date.month, date.day);
+                      Color? backgroundColor;
+                      Color textColor = colorScheme.onSurface;
 
-                      if (isBloqueado) {
-                        return Container(
-                          margin: const EdgeInsets.all(6.0),
-                          decoration: BoxDecoration(
-                            color: Colors.redAccent,
-                            shape: BoxShape.circle,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '${day.day}',
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                          ),
-                        );
+                      if (bloqueios.any((b) => isSameDay(b, day))) {
+                        backgroundColor = Colors.red.withOpacity(0.5);
+                        textColor = Colors.white;
+                      } else if (eventDates.any((e) => isSameDay(e, day))) {
+                        backgroundColor = Colors.blue.withOpacity(0.5);
+                        textColor = Colors.white;
+                      } else if (setupTeardownDates.any((st) => isSameDay(st, day))) {
+                        backgroundColor = Colors.grey[400]?.withOpacity(0.5);
+                        textColor = colorScheme.onSurface;
                       }
 
-                      if (isEvento) {
-                        return Container(
-                          margin: const EdgeInsets.all(6.0),
-                          decoration: BoxDecoration(
-                            color: Colors.blueAccent, 
-                            shape: BoxShape.circle,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '${day.day}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        );
+                      return Container(
+                        margin: const EdgeInsets.all(6.0),
+                        decoration: BoxDecoration(
+                          color: backgroundColor,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${date.day}',
+                          style: TextStyle(color: textColor),
+                        ),
+                      );
+                    },
+                    todayBuilder: (context, date, _) {
+                      final day = DateTime(date.year, date.month, date.day);
+                      Color? backgroundColor;
+                      Color textColor = colorScheme.onSurface;
+
+                      if (bloqueios.any((b) => isSameDay(b, day))) {
+                        backgroundColor = Colors.red.withOpacity(0.5);
+                        textColor = Colors.white;
+                      } else if (eventDates.any((e) => isSameDay(e, day))) {
+                        backgroundColor = Colors.blue.withOpacity(0.5);
+                        textColor = Colors.white;
+                      } else if (setupTeardownDates.any((st) => isSameDay(st, day))) {
+                        backgroundColor = Colors.grey[400]?.withOpacity(0.5);
+                        textColor = colorScheme.onSurface;
+                      } else {
+                        backgroundColor = colorScheme.primary.withOpacity(0.2);
+                        textColor = colorScheme.onSurface;
                       }
 
-                      return null;
+                      return Container(
+                        margin: const EdgeInsets.all(6.0),
+                        decoration: BoxDecoration(
+                          color: backgroundColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.amber, width: 2.5),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${date.day}',
+                          style: TextStyle(color: textColor),
+                        ),
+                      );
                     },
                   ),
                 );
               },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) {
+                print('Erro ao carregar eventos no calendário: $err');
+                return Center(child: Text('Erro ao carregar eventos: $err'));
+              },
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
                   child: SizedBox(
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: const Color(0xFF121212),
+                        backgroundColor: Colors.amber,
+                        foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.0),
                         ),
@@ -211,7 +272,8 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
                       onPressed: () {
                         ref.read(bloqueiosManuaisProvider.notifier).bloquear(selectedDate);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Data bloqueada: ${formatter.format(selectedDate)}')),
+                          SnackBar(content: Text('Data bloqueada: ${formatter.format(selectedDate)}')
+                          ),
                         );
                       },
                       child: const Text('Bloquear'),
@@ -224,7 +286,7 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 240, 198, 62),
+                        backgroundColor: const Color.fromARGB(255, 128, 105, 32),
                         foregroundColor: const Color(0xFF121212),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.0),
@@ -235,9 +297,10 @@ class _AgendaBloqueioDatasPageState extends ConsumerState<AgendaBloqueioDatasPag
                         ),
                       ),
                       onPressed: () {
-                        ref.read(bloqueiosManuaisProvider.notifier).desbloquear(selectedDate);
+                        ref.read(bloqueiosManuaisProvider.notifier).desbloquear(selectedDate, context: context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Data desbloqueada: ${formatter.format(selectedDate)}')),
+                          SnackBar(content: Text('Data desbloqueada: ${formatter.format(selectedDate)}')
+                          ),
                         );
                       },
                       child: const Text('Desbloquear'),
