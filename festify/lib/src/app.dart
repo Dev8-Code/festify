@@ -45,7 +45,6 @@ class App extends ConsumerWidget {
         '/cadastro-pagamento': (context) => const CadastroPagamentoPage(),
         '/home-page': (context) => const HomePage(),
         '/agenda-principal': (context) => const AgendaPrincipalPage(),
-        // A rota '/agenda-visualizacao' NÃO está mais aqui.
         '/agenda-bloqueio': (context) => const AgendaBloqueioDatasPage(),
         '/supplier-list': (context) => const SupplierListPage(),
         '/operator-list': (context) => const OperatorListPage(),
