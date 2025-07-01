@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onTap: () => _goHome(context),
           child: ClipOval(
             child: Image.asset(
-              'assets/logo.png',
+              'assets/logo_semnome.png', // Certifique-se de que o caminho da imagem está correto
               width: 40,  // Ajustei para um tamanho mais visível
               height: 40,
               fit: BoxFit.cover,
