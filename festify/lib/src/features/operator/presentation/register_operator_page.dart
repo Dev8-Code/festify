@@ -20,8 +20,6 @@ class RegisterOperatorPage extends ConsumerWidget {
     final telefone = ref.watch(telefoneOperadorProvider);
     final senha = ref.watch(senhaOperadorProvider);
     final repetirSenha = ref.watch(repetirSenhaOperadorProvider);
-    final senhaVisivel = ref.watch(senhaVisivelOperadorProvider);
-    final repetirSenhaVisivel = ref.watch(repetirSenhaVisivelOperadorProvider);
 
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final labelColor = isDarkMode ? Colors.white70 : Colors.black54;
