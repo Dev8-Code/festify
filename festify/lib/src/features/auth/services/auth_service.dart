@@ -20,27 +20,33 @@ class AuthService {
       );
 
       if (response.session == null) {
-        throw Exception('Sessão não criada. Verifique suas credenciais.');
+        throw 'Sessão não criada. Verifique suas credenciais.';
       }
 
       // Busca dados do usuário na tabela usuarios
       final usuario = await _repository.getCurrentUser();
 
       if (usuario == null) {
-        throw Exception('Usuário não encontrado na base de dados.');
+        await _repository.signOut();
+        throw 'Usuário não encontrado na base de dados.';
       }
 
       // Verifica se o usuário está ativo
       if (usuario.statusUsuario?.toLowerCase() != 'ativo') {
         await _repository.signOut();
-        throw Exception('Usuário inativo. Entre em contato com o suporte.');
+        throw 'Usuário inativo. Entre em contato com o suporte.';
       }
 
       return usuario;
     } on AuthException catch (e) {
+      // Propaga a mensagem amigável tratada
       throw _handleAuthException(e);
-    } catch (e) {
+    } on String {
+      // Re-lança strings (mensagens customizadas)
       rethrow;
+    } catch (e) {
+      // Outros erros
+      throw 'Erro inesperado: ${e.toString()}';
     }
   }
 
@@ -50,6 +56,8 @@ class AuthService {
       await _repository.signOut();
     } on AuthException catch (e) {
       throw _handleAuthException(e);
+    } catch (e) {
+      throw 'Erro ao fazer logout: ${e.toString()}';
     }
   }
 
@@ -92,7 +100,7 @@ class AuthService {
     } on AuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      rethrow;
+      throw 'Erro ao enviar email de recuperação: ${e.toString()}';
     }
   }
 
@@ -102,6 +110,8 @@ class AuthService {
       await _repository.updatePassword(newPassword);
     } on AuthException catch (e) {
       throw _handleAuthException(e);
+    } catch (e) {
+      throw 'Erro ao atualizar senha: ${e.toString()}';
     }
   }
 
@@ -112,38 +122,58 @@ class AuthService {
   /// Tratamento de exceções do Supabase Auth com mensagens em português
   /// Mapeia códigos de erro do Supabase para mensagens amigáveis
   String _handleAuthException(AuthException e) {
-    // Verifica primeiro pelo código de status
-    switch (e.statusCode) {
-      case '400':
-        // Verifica se é erro de email não confirmado ou credenciais inválidas
-        if (e.message.contains('Email not confirmed')) {
-          return 'Email não confirmado. Verifique seu email para ativar a conta.';
-        } else if (e.message.contains('Invalid login credentials')) {
-          return 'Email ou senha inválidos.';
-        }
-        return 'Requisição inválida. Tente novamente.';
+    // Primeiro verifica mensagens específicas no corpo do erro
+    final message = e.message.toLowerCase();
 
-      case '401':
-        return 'Não autorizado. Verifique suas credenciais.';
-
-      case '422':
-        return 'Email não confirmado. Verifique seu email.';
-
-      case '429':
-        return 'Muitas tentativas de login. Tente novamente em alguns minutos.';
-
-      default:
-        // Se nenhum código corresponder, trata pela mensagem
-        if (e.message.contains('Invalid login credentials')) {
-          return 'Email ou senha inválidos.';
-        } else if (e.message.contains('Email not confirmed')) {
-          return 'Email não confirmado. Verifique seu email.';
-        } else if (e.message.contains('User not found')) {
-          return 'Usuário não encontrado.';
-        } else if (e.message.contains('Weak password')) {
-          return 'Senha muito fraca. Use uma senha mais forte.';
-        }
-        return 'Erro de autenticação: ${e.message}';
+    if (message.contains('invalid login credentials') ||
+        message.contains('invalid email or password')) {
+      return 'Email ou senha inválidos.';
     }
+
+    if (message.contains('email not confirmed')) {
+      return 'Email não confirmado. Verifique seu email para ativar a conta.';
+    }
+
+    if (message.contains('user not found')) {
+      return 'Usuário não encontrado.';
+    }
+
+    if (message.contains('weak password')) {
+      return 'Senha muito fraca. Use uma senha mais forte (mínimo 6 caracteres).';
+    }
+
+    if (message.contains('already registered') ||
+        message.contains('already exists')) {
+      return 'Este email já está registrado.';
+    }
+
+    if (message.contains('network') || message.contains('connection')) {
+      return 'Erro de conexão. Verifique sua internet.';
+    }
+
+    if (message.contains('rate limit')) {
+      return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
+    }
+
+    // Depois verifica pelo código de status
+    if (e.statusCode != null) {
+      switch (e.statusCode) {
+        case '400':
+          return 'Requisição inválida. Verifique os dados informados.';
+        case '401':
+          return 'Não autorizado. Verifique suas credenciais.';
+        case '422':
+          return 'Email não confirmado. Verifique seu email.';
+        case '429':
+          return 'Muitas tentativas. Tente novamente em alguns minutos.';
+        case '500':
+        case '502':
+        case '503':
+          return 'Serviço indisponível. Tente novamente mais tarde.';
+      }
+    }
+
+    // Mensagem padrão se nenhuma condição foi atendida
+    return 'Erro de autenticação: ${e.message}';
   }
 }

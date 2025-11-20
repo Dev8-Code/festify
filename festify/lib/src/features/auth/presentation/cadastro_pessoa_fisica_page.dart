@@ -263,7 +263,7 @@ class CadastroPessoaFisicaPage extends ConsumerWidget {
                               bairro: bairro,
                               cidade: cidade,
                               estado: estado,
-                              dataNascimento: dataNascimento!,
+                              dataNascimento: dataNascimento,
                             );
 
                             ref.read(isLoadingCadastroProvider.notifier).state =

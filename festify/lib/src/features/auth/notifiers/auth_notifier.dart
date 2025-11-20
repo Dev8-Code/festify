@@ -10,13 +10,20 @@ part 'auth_notifier.g.dart';
 @riverpod
 class AuthNotifier extends _$AuthNotifier {
   late final AuthService _authService;
+  bool _hasInitialized = false;
 
   @override
   AuthState build() {
     _authService = ref.watch(authServiceProvider);
-    _checkInitialSession();
-    // Escuta mudanças de autenticação do Supabase
-    _setupAuthStateListener();
+
+    // Verifica sessão inicial apenas uma vez
+    if (!_hasInitialized) {
+      _hasInitialized = true;
+      _checkInitialSession();
+      // Escuta mudanças de autenticação do Supabase
+      _setupAuthStateListener();
+    }
+
     return const AuthState.initial();
   }
 
@@ -26,10 +33,15 @@ class AuthNotifier extends _$AuthNotifier {
     _authService.authStateChanges.listen((authState) {
       // Se a sessão foi destruída (logout ou expiração)
       if (authState.session == null) {
-        state = const AuthState.unauthenticated();
+        // Só fazer logout se estamos em estado autenticado
+        if (state is AuthStateAuthenticated) {
+          state = const AuthState.unauthenticated();
+        }
       } else {
-        // Se nova sessão foi criada, verifica dados do usuário
-        _checkInitialSession();
+        // Se há uma nova sessão e ainda estamos em estado inicial/erro, verifica o usuário
+        if (state is AuthStateInitial || state is AuthStateError) {
+          _checkInitialSession();
+        }
       }
     });
   }

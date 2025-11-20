@@ -11,11 +11,9 @@ class EventAgendaService {
           .select('*, clientes(nome_razao_social), locais(endereco_local)')
           .order('data_evento', ascending: true);
 
-      if (response != null && response is List) {
-        return response.map((json) => Event.fromJson(json)).toList();
-      } else {
-        return [];
-      }
+      // Supabase .select() for multiple rows returns a List
+      final List<dynamic> data = response as List<dynamic>;
+      return data.map((json) => Event.fromJson(json)).toList();
     } catch (e) {
       print('Error fetching all events: $e');
       throw Exception('Falha ao carregar todos os eventos do Supabase: $e');

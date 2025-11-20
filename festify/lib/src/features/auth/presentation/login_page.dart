@@ -20,10 +20,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final senhaVisivel = ref.watch(senhaVisivelProvider);
-    final isLoading = ref.watch(isLoadingProvider);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // Cores dinâmicas conforme tema
+    // Cores dinâmicas
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final hintColor = isDarkMode ? Colors.white70 : Colors.black54;
     final borderColor = isDarkMode ? Colors.white38 : Colors.black38;
@@ -36,9 +35,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final forgotPasswordColor =
         isDarkMode ? Colors.grey[400] : const Color(0xFF7C838C);
 
+    // Verifica estado de loading do LoginViewModel
+    final loginState = ref.watch(loginViewModelProvider);
+    final isLoading = loginState.isLoading;
+
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
           child: Column(
@@ -62,10 +65,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               TextFormField(
                 onChanged: (value) => email = value,
                 validator:
-                    ValidationBuilder(requiredMessage: 'Email obrigatório')
-                        .required()
-                        .email('Email inválido')
-                        .build(),
+                    ValidationBuilder(
+                      requiredMessage: 'Email obrigatório',
+                    ).required().email('Email inválido').build(),
                 style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   hintStyle: TextStyle(color: hintColor),
@@ -86,10 +88,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               TextFormField(
                 onChanged: (value) => senha = value,
                 validator:
-                    ValidationBuilder(requiredMessage: 'Senha obrigatória')
-                        .minLength(6, 'Mínimo 6 caracteres')
-                        .required()
-                        .build(),
+                    ValidationBuilder(
+                      requiredMessage: 'Senha obrigatória',
+                    ).minLength(6, 'Mínimo 6 caracteres').required().build(),
                 obscureText: !senhaVisivel,
                 style: TextStyle(color: textColor),
                 decoration: InputDecoration(
@@ -142,7 +143,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ],
               ),
 
-              // Botão
               // Botão Enviar
               SizedBox(
                 width: 500,
@@ -156,32 +156,48 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         )
                         : ElevatedButton(
                           onPressed: () async {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
+                            if (!_formKey.currentState!.validate()) return;
 
-                            ref.read(isLoadingProvider.notifier).state = true;
+                            final loginViewModel = ref.read(
+                              loginViewModelProvider.notifier,
+                            );
+                            final success = await loginViewModel.login(
+                              email,
+                              senha,
+                            );
 
-                            final loginVM = ref.read(loginViewModelProvider.notifier);
-                            final result = await loginVM.login(email, senha);
-
-                            ref.read(isLoadingProvider.notifier).state = false;
-                            // Check if the widget is still mounted after async operation
                             if (!context.mounted) return;
 
-                            if (!result) {
+                            if (!success) {
+                              // Obtém a mensagem de erro do LoginViewModel
+                              final loginStateAfterError = ref.read(
+                                loginViewModelProvider,
+                              );
+                              final errorMessage = loginStateAfterError
+                                  .maybeWhen(
+                                    error:
+                                        (error, stackTrace) => error.toString(),
+                                    orElse:
+                                        () =>
+                                            'Não foi possível realizar o login',
+                                  );
+
+                              // Remove SnackBars anteriores antes de mostrar novo
+                              ScaffoldMessenger.of(context).clearSnackBars();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Não foi possível realizar o login",
-                                  ),
+                                SnackBar(
+                                  content: Text(errorMessage),
+                                  backgroundColor: Colors.red,
+                                  duration: const Duration(seconds: 4),
                                 ),
                               );
-
                               return;
                             }
 
-                            Navigator.pushNamed(context, '/contract-main');
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/contract-main',
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: buttonBackground,
@@ -242,4 +258,3 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 }
-

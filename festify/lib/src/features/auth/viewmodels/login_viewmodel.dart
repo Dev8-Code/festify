@@ -1,4 +1,6 @@
-import 'package:festify/src/features/core/providers/database_provider.dart';  
+import 'package:festify/src/features/auth/notifiers/auth_notifier.dart';
+import 'package:festify/src/features/auth/utils/auth_exception_handler.dart';
+import 'package:festify/src/features/auth/providers/auth_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -6,36 +8,36 @@ part 'login_viewmodel.g.dart';
 
 @riverpod
 class LoginViewModel extends _$LoginViewModel {
-
   @override
   Future<void> build() async {
-
+    // O estado inicial é AsyncData(null), representando sucesso sem dado.
   }
 
   Future<bool> login(String email, String senha) async {
-    state = AsyncLoading();
+    state = const AsyncLoading();
+
+    final authService = ref.read(authServiceProvider);
 
     try {
-      final supabase = ref.read(supabaseClientProvider);
-      await supabase.auth.signOut(); //todo: remover essa linha, manter apenas para testes
+      // Usa o AuthService.login() que já faz toda a validação
+      // Isso garante que o usuário existe na tabela usuarios
+      await authService.login(email: email, password: senha);
 
-      final response = await supabase.auth.signInWithPassword(
-        email: email,
-        password: senha
-      ); 
+      // Após login bem-sucedido, atualiza o estado global de autenticação
+      // isso sincroniza com o AuthNotifier
+      ref
+          .read(authNotifierProvider.notifier)
+          .login(email: email, password: senha);
 
-      if (response.session == null) {
-        state = AsyncError("Usuário ou senha inválidos", StackTrace.current);
-        return false;
-      }
-
+      state = const AsyncData(null);
       return true;
-
+    } on AuthException catch (e, st) {
+      final errorMessage = AuthExceptionHandler.handleAuthException(e);
+      state = AsyncError(errorMessage, st);
+      return false;
     } catch (e, st) {
-      if (e is AuthApiException) {
-        state = AsyncError("Usuário ou senha inválidos", st);
-      }
-      state = AsyncError("Não foi possível realizar o login", st);
+      final errorMessage = AuthExceptionHandler.handleException(e);
+      state = AsyncError(errorMessage, st);
       return false;
     }
   }

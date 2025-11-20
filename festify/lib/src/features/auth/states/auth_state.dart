@@ -3,6 +3,7 @@ import '../models/usuario.dart';
 
 part 'auth_state.freezed.dart';
 
+/// Estados de autenticação da aplicação
 @freezed
 class AuthState with _$AuthState {
   const factory AuthState.initial() = AuthStateInitial;
