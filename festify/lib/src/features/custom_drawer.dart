@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/providers/app_providers.dart';
+import 'package:festify/src/features/auth/notifiers/auth_notifier.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -18,6 +19,7 @@ class MyDrawer extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
+                    // ... (ListTiles de Clientes, Fornecedores, Operadores) ...
                     ListTile(
                       leading: const Icon(Icons.person),
                       title: const Text('Clientes'),
@@ -45,6 +47,7 @@ class MyDrawer extends StatelessWidget {
 
               const Divider(),
 
+              // ListTile do Tema
               ListTile(
                 leading: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
                 title: Text(isDarkMode ? 'Modo claro' : 'Modo escuro'),
@@ -54,11 +57,52 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
 
+              const Divider(),
+
+              // ListTile de Sair (com Confirmação e Logout)
               ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Logout'),
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/login');
+                leading: const Icon(Icons.exit_to_app, color: Colors.red),
+                title: const Text('Sair', style: TextStyle(color: Colors.red)),
+                onTap: () async {
+                  // 1. Obtém o AuthNotifier usando o provider gerado pelo riverpod_annotation
+                  final authNotifier = ref.read(authNotifierProvider.notifier);
+
+                  // 2. Mostra diálogo de confirmação
+                  final shouldLogout = await showDialog<bool>(
+                    context: context,
+                    builder:
+                        (context) => AlertDialog(
+                          title: const Text('Confirmar saída'),
+                          content: const Text('Deseja realmente sair?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Cancelar'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: const Text('Sair'),
+                            ),
+                          ],
+                        ),
+                  );
+
+                  if (shouldLogout == true && context.mounted) {
+                    // 3. Realiza logout
+                    await authNotifier.logout();
+
+                    // 4. Navega para login
+                    if (context.mounted) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/login',
+                        (route) => false,
+                      );
+                    }
+                  }
                 },
               ),
             ],

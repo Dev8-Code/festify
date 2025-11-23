@@ -24,8 +24,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onTap: () => _goHome(context),
           child: ClipOval(
             child: Image.asset(
-              'assets/logo_semnome.png', // Certifique-se de que o caminho da imagem está correto
-              width: 40,  // Ajustei para um tamanho mais visível
+              'assets/logo_semnome.png',
+              width: 40,
               height: 40,
               fit: BoxFit.cover,
             ),
@@ -37,10 +37,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         onTap: () => _goHome(context),
         child: const Text(
           'Lamone',
-          style: TextStyle(
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white),
         ),
       ),
 
@@ -48,12 +45,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
           child: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            ),
+            builder:
+                (context) => IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.white),
+                  onPressed: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                ),
           ),
         ),
       ],

@@ -36,7 +36,7 @@ class CardBasicStructure extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 fontFamily: 'Roboto',
                 color: titleColor,
-              )
+              ),
             ),
             SizedBox(height: 8),
             Row(
@@ -50,16 +50,6 @@ class CardBasicStructure extends StatelessWidget {
                     color: subtitleColor,
                   ),
                 ),
-                SizedBox(width: 30),
-                // Text(
-                //   'R\$ X.XXX,XX',
-                //   style: TextStyle(
-                //     fontSize: 15,
-                //     fontWeight: FontWeight.w500,
-                //     fontFamily: 'Roboto',
-                //     color: subtitleColor,
-                //   ),
-                // ),
               ],
             ),
           ],
