@@ -1,8 +1,8 @@
 // lib/src/features/home/providers/event_providers.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/event_agenda_model.dart'; // Seu modelo de Evento
-import '../services/event_agenda_service.dart'; // Seu serviço de eventos
+import '../models/event_agenda_model.dart';
+import '../services/event_agenda_service.dart';
 
 class EventState {
   final Event? event;

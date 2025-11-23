@@ -19,7 +19,6 @@ class MyDrawer extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    // ... (ListTiles de Clientes, Fornecedores, Operadores) ...
                     ListTile(
                       leading: const Icon(Icons.person),
                       title: const Text('Clientes'),

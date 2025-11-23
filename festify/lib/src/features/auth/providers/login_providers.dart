@@ -1,4 +1,1 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final senhaVisivelProvider = StateProvider<bool>((ref) => false);
-final isLoadingProvider = StateProvider<bool>((ref) => false);
+export 'auth_providers.dart' show senhaVisivelProvider, isLoadingProvider;

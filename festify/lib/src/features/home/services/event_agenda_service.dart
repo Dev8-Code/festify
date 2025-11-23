@@ -15,23 +15,24 @@ class EventAgendaService {
       final List<dynamic> data = response as List<dynamic>;
       return data.map((json) => Event.fromJson(json)).toList();
     } catch (e) {
-      print('Error fetching all events: $e');
       throw Exception('Falha ao carregar todos os eventos do Supabase: $e');
     }
   }
 
   Future<Event> fetchEventDetails(int eventId) async {
     try {
-      final response = await _supabase
-          .from('eventos')
-          .select('*, clientes(nome_razao_social), locais(endereco_local)')
-          .eq('id_evento', eventId)
-          .single();
+      final response =
+          await _supabase
+              .from('eventos')
+              .select('*, clientes(nome_razao_social), locais(endereco_local)')
+              .eq('id_evento', eventId)
+              .single();
 
       return Event.fromJson(response);
     } catch (e) {
-      print('Error fetching single event details: $e');
-      throw Exception('Falha ao carregar os detalhes do evento do Supabase: $e');
+      throw Exception(
+        'Falha ao carregar os detalhes do evento do Supabase: $e',
+      );
     }
   }
 }

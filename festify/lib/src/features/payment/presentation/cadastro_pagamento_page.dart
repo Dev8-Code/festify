@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/contract_service.dart';
-import '../../features/custom_app_bar.dart';
-import '../../features/custom_bottom_nav_bar.dart';
-import '../../features/custom_drawer.dart';
+import 'package:festify/src/features/payment/services/contract_service.dart';
+import 'package:festify/src/features/custom_app_bar.dart';
+import 'package:festify/src/features/custom_bottom_nav_bar.dart';
+import 'package:festify/src/features/custom_drawer.dart';
 
 class CadastroPagamentoPage extends ConsumerStatefulWidget {
   final int? idEvento;

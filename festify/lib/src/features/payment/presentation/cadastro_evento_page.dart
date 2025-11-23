@@ -130,7 +130,9 @@ class _CadastroEventoPageState extends ConsumerState<CadastroEventoPage> {
         idCliente: _idClienteAtual!,
       );
 
+      print('[CadastroEventoPage] Criando evento: ${evento.toString()}');
       final idEvento = await EventService.salvarEvento(evento);
+      print('[CadastroEventoPage] Resultado salvar evento: $idEvento');
 
       if (idEvento != null) {
         if (mounted) {
@@ -146,11 +148,14 @@ class _CadastroEventoPageState extends ConsumerState<CadastroEventoPage> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Erro ao cadastrar evento!')),
+            const SnackBar(
+              content: Text('Erro ao cadastrar evento! Verifique os logs.'),
+            ),
           );
         }
       }
     } catch (e) {
+      print('[CadastroEventoPage] Erro ao cadastrar evento: $e');
       if (mounted) {
         ScaffoldMessenger.of(
           context,

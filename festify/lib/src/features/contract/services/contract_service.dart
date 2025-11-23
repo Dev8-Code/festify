@@ -22,7 +22,6 @@ class ContractService {
 
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
-      print('Erro ao buscar eventos com clientes: $e');
       return [];
     }
   }
@@ -50,7 +49,6 @@ class ContractService {
 
       return response;
     } catch (e) {
-      print('Erro ao buscar evento por ID: $e');
       return null;
     }
   }
@@ -102,7 +100,6 @@ class ContractService {
     }
   }
 
-  // Método para cadastrar contrato
   static Future<int?> cadastrarContrato({
     required int idEvento,
     required int parcelas,
@@ -134,12 +131,10 @@ class ContractService {
 
       return response['id_contrato'] as int?;
     } catch (e) {
-      print('Erro ao cadastrar contrato: $e');
       return null;
     }
   }
 
-  // Método para buscar contratos por evento
   static Future<List<Map<String, dynamic>>> buscarContratosPorEvento(
     int idEvento,
   ) async {
@@ -157,7 +152,6 @@ class ContractService {
     }
   }
 
-  // Método para atualizar contrato
   static Future<bool> atualizarContrato({
     required int idContrato,
     required Map<String, dynamic> dados,

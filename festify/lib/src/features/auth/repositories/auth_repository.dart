@@ -85,32 +85,10 @@ class AuthRepository {
   }
 
   /// Verifica se o usuário está autenticado
+  /// DEPRECATED: Use auth_notifier.isAuthenticated em vez disso
+  @deprecated
   bool isAuthenticated() {
     return _supabase.auth.currentUser != null &&
         _supabase.auth.currentSession != null;
-  }
-
-  /// Cria um novo usuário na tabela 'usuarios' após ser criado no Auth
-  /// Nota: O trigger do Supabase cria o usuário no auth.users automaticamente
-  Future<void> createUserInDatabase({
-    required String idUsuario,
-    required String emailUsuario,
-    required String nomeRazaoSocial,
-    String? cpfUsuario,
-    String? telefoneUsuario,
-  }) async {
-    try {
-      await _supabase.from('usuarios').insert({
-        'id_usuario': idUsuario,
-        'email_usuario': emailUsuario,
-        'nome_razao_social': nomeRazaoSocial,
-        'cpf_usuario': cpfUsuario,
-        'telefone_usuario': telefoneUsuario,
-        'status_usuario': 'ativo',
-        'permissao_usuario': 'cliente', // padrão
-      });
-    } catch (e) {
-      rethrow;
-    }
   }
 }

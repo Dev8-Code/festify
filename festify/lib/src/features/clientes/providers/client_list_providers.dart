@@ -12,12 +12,9 @@ class ClientListNotifier extends AsyncNotifier<List<Client>> {
   try {
     final response = await Supabase.instance.client.from('clientes').select();
 
-    // Adicione os prints aqui, ainda dentro do try
-    print('Resposta do Supabase: $response');
-
+        
     final data = response as List<dynamic>;
-    print('Número de clientes recebidos: ${data.length}');
-
+    
     return data.map((item) => Client.fromMap(item)).toList();
   } catch (e, stackTrace) {
     print('Erro ao buscar clientes: $e');
@@ -52,3 +49,4 @@ final clientListProvider =
     AsyncNotifierProvider<ClientListNotifier, List<Client>>(
   () => ClientListNotifier(),
 );
+

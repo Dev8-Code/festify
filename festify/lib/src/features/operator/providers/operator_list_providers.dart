@@ -12,18 +12,12 @@ class OperatorListNotifier extends StateNotifier<List<Operator>> {
   /// Carrega todos os operadores da tabela 'usuarios'
   Future<void> loadOperators() async {
     try {
-      print('Iniciando busca de operadores...');
-
       final response = await supabase
           .from('usuarios')
           .select()
           .eq('permissao_usuario', 'operador'); // Filtrar apenas operadores
 
-      print('Tipo da resposta: ${response.runtimeType}');
-      print('Quantidade de registros: ${response.length}');
-
       if (response.isEmpty) {
-        print('Nenhum operador encontrado no banco');
         state = [];
         return;
       }
@@ -32,10 +26,7 @@ class OperatorListNotifier extends StateNotifier<List<Operator>> {
       final operators = data.map((item) => Operator.fromMap(item)).toList();
 
       state = operators;
-      print('Operadores carregados: ${operators.length}');
-    } catch (e, stackTrace) {
-      print('Erro ao buscar operadores: $e');
-      print('Stack trace: $stackTrace');
+    } catch (e) {
       state = []; // Garantir que o estado seja uma lista vazia em caso de erro
     }
   }

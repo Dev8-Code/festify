@@ -66,11 +66,7 @@ class AuthService {
   Future<Usuario?> checkSession() async {
     try {
       final session = _repository.currentSession;
-
-      // Se não há sessão, retorna null
       if (session == null) return null;
-
-      // Se há sessão, busca os dados do usuário
       return await _repository.getCurrentUser();
     } catch (e) {
       return null;
@@ -83,7 +79,8 @@ class AuthService {
   }
 
   /// Obtém o usuário atual autenticado
-  /// Retorna null se não houver usuário autenticado
+  /// DEPRECATED: Use auth_notifier.currentUser em vez disso
+  @deprecated
   Future<Usuario?> getCurrentUser() async {
     try {
       return await _repository.getCurrentUser();
@@ -167,7 +164,6 @@ class AuthService {
   /// Tratamento de exceções do Supabase Auth com mensagens em português
   /// Mapeia códigos de erro do Supabase para mensagens amigáveis
   String _handleAuthException(AuthException e) {
-    // Primeiro verifica mensagens específicas no corpo do erro
     final message = e.message.toLowerCase();
 
     if (message.contains('invalid login credentials') ||
@@ -209,7 +205,6 @@ class AuthService {
       return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
     }
 
-    // Depois verifica pelo código de status
     if (e.statusCode != null) {
       switch (e.statusCode) {
         case '400':
@@ -227,7 +222,6 @@ class AuthService {
       }
     }
 
-    // Mensagem padrão se nenhuma condição foi atendida
     return 'Erro de autenticação: ${e.message}';
   }
 }

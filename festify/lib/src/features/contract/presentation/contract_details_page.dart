@@ -372,10 +372,7 @@ class ContractButtons extends StatelessWidget {
       child: ElevatedButton(
         onPressed:
             isEnabled
-                ? () {
-                  // TODO: Implementar ações dos botões
-                  print('Botão pressionado: $text');
-                }
+                ? () {}
                 : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color.fromARGB(255, 30, 30, 30),
@@ -416,3 +413,5 @@ class ContractButtons extends StatelessWidget {
     );
   }
 }
+
+

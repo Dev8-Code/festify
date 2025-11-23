@@ -15,11 +15,7 @@ class SupplierListNotifier extends AsyncNotifier<List<Supplier>> {
       final response =
           await Supabase.instance.client.from('fornecedores').select();
 
-      print('Tipo da resposta: ${response.runtimeType}');
-      print('Quantidade de registros: ${response.length}');
-
       if (response.isEmpty) {
-        print('Nenhum registro encontrado no banco');
         return [];
       }
 
@@ -46,8 +42,6 @@ class SupplierListNotifier extends AsyncNotifier<List<Supplier>> {
           .delete()
           .eq('id_fornecedor', id_fornecedor)
           .select();
-
-      // Não precisamos de uma variável para armazenar a resposta, já que não estamos utilizando
     } catch (e) {
       // Em caso de erro, recarrega lista para manter estado consistente
       state = const AsyncLoading();

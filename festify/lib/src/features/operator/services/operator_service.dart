@@ -12,7 +12,6 @@ Future<String> registerOperator({
   try {
     final supabase = Supabase.instance.client;
 
-    // Cria o usuário na auth.users
     final AuthResponse authResponse = await supabase.auth.signUp(
       email: email,
       password: senha,
@@ -22,8 +21,6 @@ Future<String> registerOperator({
       throw Exception('Falha ao criar usuário na autenticação');
     }
 
-    // Depois, insere os dados adicionais na tabela usuarios
-    // usando o ID do usuário criado no auth.users
     await supabase.from('usuarios').insert({
       'id_usuario': authResponse.user!.id,
       'nome_razao_social': nome,
@@ -58,13 +55,7 @@ Future<String> deleteOperator({
 }) async {
   try {
     final supabase = Supabase.instance.client;
-
-    // remove da tabela usuarios
     await supabase.from('usuarios').delete().eq('id_usuario', idOperador);
-
-    // Depois, remove o usuário do auth.users
-    // Nota: Só admin pode deletar outros usuários do auth.users
-    // Se você não tem permissões de admin, pode apenas desativar o usuário
     try {
       await supabase.auth.admin.deleteUser(idOperador);
     } catch (e) {

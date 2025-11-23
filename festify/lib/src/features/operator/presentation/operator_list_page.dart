@@ -159,18 +159,15 @@ class _OperatorListPageState extends ConsumerState<OperatorListPage> {
                               );
                             },
                             onDismissed: (_) async {
-                              // Primeiro remove do estado local
                               ref
                                   .read(operatorListProvider.notifier)
                                   .deleteOperator(operator.idUsuario);
 
-                              // Depois chama o serviço para deletar do banco
                               final result = await deleteOperator(
                                 context: context,
                                 idOperador: operator.idUsuario,
                               );
 
-                              // Se deu erro, recarrega a lista
                               if (result != 'success') {
                                 await ref
                                     .read(operatorListProvider.notifier)

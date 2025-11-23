@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ContractService {
   static final _supabase = Supabase.instance.client;
 
-  // Método para cadastrar contrato
   static Future<int?> cadastrarContrato({
     required int idEvento,
     required int parcelas,
@@ -35,12 +34,10 @@ class ContractService {
 
       return response['id_contrato'] as int?;
     } catch (e) {
-      print('Erro ao cadastrar contrato: $e');
       return null;
     }
   }
 
-  // Método para buscar contratos por evento
   static Future<List<Map<String, dynamic>>> buscarContratosPorEvento(
     int idEvento,
   ) async {
@@ -53,12 +50,10 @@ class ContractService {
 
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
-      print('Erro ao buscar contratos: $e');
       return [];
     }
   }
 
-  // Método para atualizar contrato
   static Future<bool> atualizarContrato({
     required int idContrato,
     required Map<String, dynamic> dados,
@@ -71,7 +66,6 @@ class ContractService {
 
       return true;
     } catch (e) {
-      print('Erro ao atualizar contrato: $e');
       return false;
     }
   }

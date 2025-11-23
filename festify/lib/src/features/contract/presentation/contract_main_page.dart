@@ -213,19 +213,16 @@ class _ContractMainPageState extends ConsumerState<ContractMainPage> {
                                 );
                               },
                               onDismissed: (_) async {
-                                // Remove do estado local primeiro
                                 ref
                                     .read(contractListProvider.notifier)
                                     .deleteContract(contract['id_evento']);
 
-                                // Depois chama o serviço para deletar do banco
                                 final result =
                                     await ContractService.excluirEvento(
                                       context: context,
                                       idEvento: contract['id_evento'],
                                     );
 
-                                // Se deu erro, recarrega a lista
                                 if (result != 'success') {
                                   await ref
                                       .read(contractListProvider.notifier)

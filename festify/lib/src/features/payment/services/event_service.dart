@@ -5,24 +5,26 @@ import '../models/event_model.dart';
 class EventService {
   static final _supabase = Supabase.instance.client;
 
-  // Método para salvar evento
   static Future<int?> salvarEvento(Evento evento) async {
     try {
+      final eventoMap = evento.toMap();
+      print('[EventService] Salvando evento: $eventoMap');
+
       final response =
           await _supabase
               .from('eventos')
-              .insert(evento.toMap())
+              .insert(eventoMap)
               .select('id_evento')
               .single();
 
+      print('[EventService] Evento salvo com sucesso. Response: $response');
       return response['id_evento'] as int?;
     } catch (e) {
-      print('Erro ao salvar evento: $e');
+      print('[EventService] Erro ao salvar evento: $e');
       return null;
     }
   }
 
-  // Método para buscar eventos
   static Future<List<Evento>> buscarEventos() async {
     try {
       final response = await _supabase
@@ -32,12 +34,10 @@ class EventService {
 
       return response.map<Evento>((map) => Evento.fromMap(map)).toList();
     } catch (e) {
-      print('Erro ao buscar eventos: $e');
       return [];
     }
   }
 
-  // Método para buscar evento por ID
   static Future<Evento?> buscarEventoPorId(int id) async {
     try {
       final response =
@@ -45,12 +45,10 @@ class EventService {
 
       return Evento.fromMap(response);
     } catch (e) {
-      print('Erro ao buscar evento: $e');
       return null;
     }
   }
 
-  // Método para atualizar evento
   static Future<bool> atualizarEvento(
     int id,
     Map<String, dynamic> dados,
@@ -60,19 +58,16 @@ class EventService {
 
       return true;
     } catch (e) {
-      print('Erro ao atualizar evento: $e');
       return false;
     }
   }
 
-  // Método para excluir evento
   static Future<bool> excluirEvento(int id) async {
     try {
       await _supabase.from('eventos').delete().eq('id_evento', id);
 
       return true;
     } catch (e) {
-      print('Erro ao excluir evento: $e');
       return false;
     }
   }

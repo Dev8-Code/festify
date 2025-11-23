@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validator/form_validator.dart';
 import '../providers/login_providers.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -21,17 +20,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     final senhaVisivel = ref.watch(senhaVisivelProvider);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    // Cores dinâmicas
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final hintColor = isDarkMode ? Colors.white70 : Colors.black54;
     final borderColor = isDarkMode ? Colors.white38 : Colors.black38;
     final focusedBorderColor = Colors.amber;
     final buttonBackground = Colors.yellow[700]!;
     final buttonForeground = const Color(0xFF121E30);
-    final googleButtonBackground = isDarkMode ? Colors.grey[300] : Colors.white;
-    final googleButtonForeground =
-        isDarkMode ? Colors.black : const Color(0xFF121E30);
     final forgotPasswordColor =
         isDarkMode ? Colors.grey[400] : const Color(0xFF7C838C);
 
@@ -123,8 +117,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: 16),
-
-              // Link esqueci senha
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -143,7 +135,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ],
               ),
 
-              // Botão Enviar
               SizedBox(
                 width: 500,
                 height: 50,
@@ -213,43 +204,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           ),
                           child: const Text('Enviar'),
                         ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Botão Google
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton.icon(
-                  icon: FaIcon(
-                    FontAwesomeIcons.google,
-                    color: googleButtonForeground,
-                    size: 18,
-                  ),
-                  label: Text(
-                    'Entrar com Google',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: googleButtonForeground,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: googleButtonBackground,
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Login com Google (não implementado)'),
-                      ),
-                    );
-                  },
-                ),
               ),
             ],
           ),
