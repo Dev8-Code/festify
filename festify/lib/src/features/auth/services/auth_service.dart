@@ -94,23 +94,68 @@ class AuthService {
 
   /// Recuperação de senha
   /// Envia um email de recuperação para o endereço informado
+  /// Valida se o email tem formato válido
   Future<void> resetPassword(String email) async {
     try {
+      // Validação básica de email
+      if (email.isEmpty || !email.contains('@')) {
+        throw 'Email inválido';
+      }
+
       await _repository.resetPassword(email);
     } on AuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
+      final errorMsg = e.toString().toLowerCase();
+
+      // Tratamentos específicos de erro
+      if (errorMsg.contains('user not found') ||
+          errorMsg.contains('no user found')) {
+        throw 'E-mail não cadastrado na plataforma.';
+      }
+      if (errorMsg.contains('invalid email')) {
+        throw 'Formato de e-mail inválido.';
+      }
+      if (errorMsg.contains('network') || errorMsg.contains('connection')) {
+        throw 'Erro de conexão. Verifique sua internet e tente novamente.';
+      }
+
       throw 'Erro ao enviar email de recuperação: ${e.toString()}';
     }
   }
 
   /// Atualiza a senha do usuário atualmente autenticado
+  /// Requer que o usuário tenha uma sessão válida (via link de recuperação)
   Future<void> updatePassword(String newPassword) async {
     try {
+      // Validações de segurança
+      if (newPassword.isEmpty) {
+        throw 'Senha não pode estar vazia';
+      }
+
+      if (newPassword.length < 6) {
+        throw 'Senha deve ter no mínimo 6 caracteres';
+      }
+
       await _repository.updatePassword(newPassword);
     } on AuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
+      final errorMsg = e.toString().toLowerCase();
+
+      // Tratamentos específicos para atualização de senha
+      if (errorMsg.contains('no session') ||
+          errorMsg.contains('session does not exist') ||
+          errorMsg.contains('invalid token')) {
+        throw 'Sessão expirada. Por favor, clique no link de recuperação novamente.';
+      }
+      if (errorMsg.contains('weak password')) {
+        throw 'Senha muito fraca. Use uma senha mais forte com letras, números e caracteres especiais.';
+      }
+      if (errorMsg.contains('network') || errorMsg.contains('connection')) {
+        throw 'Erro de conexão. Verifique sua internet e tente novamente.';
+      }
+
       throw 'Erro ao atualizar senha: ${e.toString()}';
     }
   }
@@ -134,7 +179,7 @@ class AuthService {
       return 'Email não confirmado. Verifique seu email para ativar a conta.';
     }
 
-    if (message.contains('user not found')) {
+    if (message.contains('user not found') || message.contains('no user')) {
       return 'Usuário não encontrado.';
     }
 
@@ -145,6 +190,15 @@ class AuthService {
     if (message.contains('already registered') ||
         message.contains('already exists')) {
       return 'Este email já está registrado.';
+    }
+
+    if (message.contains('invalid token') ||
+        message.contains('token expired')) {
+      return 'Token de recuperação inválido ou expirado.';
+    }
+
+    if (message.contains('session does not exist')) {
+      return 'Sessão expirada. Por favor, faça login novamente.';
     }
 
     if (message.contains('network') || message.contains('connection')) {
