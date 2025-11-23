@@ -29,6 +29,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       initialRoute: '/login',
+      debugShowCheckedModeBanner: false,
       routes: {
         '/login': (context) => const LoginPage(),
         '/password-reset': (context) => const PasswordResetPage(),
