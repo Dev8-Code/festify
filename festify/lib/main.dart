@@ -13,12 +13,24 @@ void main() async {
     await Supabase.initialize(
       url: dotenv.env['SUPABASE_URL']!,
       anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+      authOptions: const FlutterAuthClientOptions(
+        authFlowType: AuthFlowType.pkce, // necessário para deep links
+      ),
     );
 
     print('Supabase inicializado com sucesso!');
   } catch (e) {
     print('Erro na inicialização: $e');
   }
+
+  // 🔥 Listener global de eventos (inclui deep link do reset)
+  Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    final event = data.event;
+
+    if (event == AuthChangeEvent.passwordRecovery) {
+      print("🔗 Deep link recebido: password recovery");
+    }
+  });
 
   runApp(ProviderScope(child: App()));
 }

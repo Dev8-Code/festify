@@ -16,29 +16,22 @@ class AuthNotifier extends _$AuthNotifier {
   AuthState build() {
     _authService = ref.watch(authServiceProvider);
 
-    // Verifica sessão inicial apenas uma vez
     if (!_hasInitialized) {
       _hasInitialized = true;
       _checkInitialSession();
-      // Escuta mudanças de autenticação do Supabase
       _setupAuthStateListener();
     }
 
     return const AuthState.initial();
   }
 
-  /// Configura um listener para mudanças de autenticação
-  /// Útil para sincronizar estado quando sessão expira
   void _setupAuthStateListener() {
-    _authService.authStateChanges.listen((authState) {
-      // Se a sessão foi destruída (logout ou expiração)
-      if (authState.session == null) {
-        // Só fazer logout se estamos em estado autenticado
+    _authService.authStateChanges.listen((session) {
+      if (session == null) {
         if (state is AuthStateAuthenticated) {
           state = const AuthState.unauthenticated();
         }
       } else {
-        // Se há uma nova sessão e ainda estamos em estado inicial/erro, verifica o usuário
         if (state is AuthStateInitial || state is AuthStateError) {
           _checkInitialSession();
         }
@@ -46,35 +39,24 @@ class AuthNotifier extends _$AuthNotifier {
     });
   }
 
-  /// Verifica se há uma sessão ativa ao inicializar o app
-  /// Restaura o usuário se houver sessão persistida
   Future<void> _checkInitialSession() async {
     state = const AuthState.loading();
-
     try {
       final usuario = await _authService.checkSession();
-
       if (usuario != null) {
         state = AuthState.authenticated(usuario);
       } else {
         state = const AuthState.unauthenticated();
       }
-    } catch (e) {
+    } catch (_) {
       state = const AuthState.unauthenticated();
     }
   }
 
-  /// Realiza login com email e senha
-  /// Retorna true se o login foi bem-sucedido, false caso contrário
   Future<bool> login({required String email, required String password}) async {
     state = const AuthState.loading();
-
     try {
-      final usuario = await _authService.login(
-        email: email,
-        password: password,
-      );
-
+      final usuario = await _authService.login(email: email, password: password);
       state = AuthState.authenticated(usuario);
       return true;
     } catch (e) {
@@ -83,26 +65,20 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  /// Realiza logout e limpa a sessão
-  /// Também redireciona para a tela de login
   Future<void> logout() async {
     state = const AuthState.loading();
-
     try {
       await _authService.logout();
       state = const AuthState.unauthenticated();
     } catch (e) {
       state = AuthState.error('Erro ao fazer logout: ${e.toString()}');
-      // Mesmo em caso de erro, força o estado para unauthenticated
       state = const AuthState.unauthenticated();
     }
   }
 
-  /// Recupera senha enviando email de recuperação
-  /// Retorna true se o email foi enviado com sucesso
-  Future<bool> resetPassword(String email) async {
+  Future<bool> resetPassword(String email, {String? redirectTo}) async {
     try {
-      await _authService.resetPassword(email);
+      await _authService.resetPassword(email, redirectTo: redirectTo);
       return true;
     } catch (e) {
       state = AuthState.error(e.toString());
@@ -110,11 +86,14 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  /// Atualiza a senha do usuário atualmente autenticado
-  /// Retorna true se a senha foi atualizada com sucesso
-  Future<bool> updatePassword(String newPassword) async {
+  Future<bool> resetPasswordWithToken(String newPassword, String recoveryToken) async {
     try {
-      await _authService.updatePassword(newPassword);
+      state = const AuthState.loading();
+      await _authService.updatePasswordWithRecoveryToken(
+        newPassword: newPassword,
+        recoveryToken: recoveryToken,
+      );
+      state = const AuthState.unauthenticated(); // usuário não está logado ainda
       return true;
     } catch (e) {
       state = AuthState.error(e.toString());
@@ -122,22 +101,8 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  /// Obtém o usuário atualmente autenticado
-  /// Retorna null se não estiver autenticado
-  Usuario? get currentUser {
-    return state.maybeWhen(
-      authenticated: (usuario) => usuario,
-      orElse: () => null,
-    );
-  }
-
-  /// Verifica se o usuário está autenticado
-  bool get isAuthenticated {
-    return state.maybeWhen(authenticated: (_) => true, orElse: () => false);
-  }
-
-  /// Obtém a mensagem de erro se houver
-  String? get errorMessage {
-    return state.maybeWhen(error: (message) => message, orElse: () => null);
-  }
+  // Getters públicos seguros
+  Usuario? get currentUser => state.maybeWhen(authenticated: (u) => u, orElse: () => null);
+  bool get isAuthenticated => state.maybeWhen(authenticated: (_) => true, orElse: () => false);
+  String? get errorMessage => state.maybeWhen(error: (msg) => msg, orElse: () => null);
 }

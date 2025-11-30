@@ -1,12 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validator/form_validator.dart';
-import '../notifiers/auth_notifier.dart';
-import '../states/auth_state.dart';
 import '../../custom_app_bar.dart';
-
-/// Página para atualizar senha após recuperação
-/// Acessada através do link enviado por email
+import '../notifiers/auth_notifier.dart';
 class PasswordUpdatePage extends ConsumerStatefulWidget {
   const PasswordUpdatePage({super.key});
 
@@ -21,6 +18,26 @@ class _PasswordUpdatePageState extends ConsumerState<PasswordUpdatePage> {
   bool _isLoading = false;
   bool _showNewPassword = false;
   bool _showConfirmPassword = false;
+  late String _recoveryToken;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final uri = Uri.base;
+    final token = uri.queryParameters['code']; // Captura o token do link
+
+    if (token == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Link inválido ou expirado')),
+        );
+        Navigator.pushReplacementNamed(context, '/login');
+      });
+    } else {
+      _recoveryToken = token;
+    }
+  }
 
   @override
   void dispose() {
@@ -35,48 +52,32 @@ class _PasswordUpdatePageState extends ConsumerState<PasswordUpdatePage> {
     setState(() => _isLoading = true);
 
     try {
-      final authNotifier = ref.read(authNotifierProvider.notifier);
-      final success = await authNotifier.updatePassword(
-        _newPasswordController.text,
-      );
+      // Chama o método do AuthNotifier que atualiza a senha com token
+          await ref.read(authNotifierProvider.notifier)
+              .resetPasswordWithToken(_newPasswordController.text, _recoveryToken);
 
       if (!mounted) return;
 
-      if (success) {
-        // Sucesso - mostra mensagem e redireciona para login
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Senha atualizada com sucesso!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Senha atualizada com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
 
-        // Aguarda um pouco e vai para login
-        await Future.delayed(const Duration(seconds: 2));
-        if (mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/login',
-            (route) => false,
-          );
-        }
-      } else {
-        // Erro - busca mensagem
-        final errorMessage = ref
-            .read(authNotifierProvider)
-            .maybeWhen(
-              error: (msg) => msg,
-              orElse: () => 'Erro ao atualizar senha',
-            );
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-        );
-      }
-    } finally {
+      await Future.delayed(const Duration(seconds: 2));
       if (mounted) {
-        setState(() => _isLoading = false);
+        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -99,7 +100,6 @@ class _PasswordUpdatePageState extends ConsumerState<PasswordUpdatePage> {
               child: Form(
                 key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 60),
                     ClipOval(
@@ -107,7 +107,6 @@ class _PasswordUpdatePageState extends ConsumerState<PasswordUpdatePage> {
                         'assets/logo.png',
                         width: 125,
                         height: 125,
-                        fit: BoxFit.cover,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -125,34 +124,23 @@ class _PasswordUpdatePageState extends ConsumerState<PasswordUpdatePage> {
                       style: TextStyle(fontSize: 14, color: labelColor),
                     ),
                     const SizedBox(height: 32),
-
-                    // Campo Nova Senha
+                    // Nova senha
                     TextFormField(
                       controller: _newPasswordController,
                       obscureText: !_showNewPassword,
                       style: TextStyle(color: textColor),
-                      validator:
-                          ValidationBuilder(
-                                requiredMessage: 'Senha obrigatória',
-                              )
-                              .minLength(6, 'Mínimo 6 caracteres')
-                              .required()
-                              .build(),
+                      validator: ValidationBuilder(requiredMessage: 'Senha obrigatória')
+                          .minLength(6)
+                          .build(),
                       decoration: InputDecoration(
                         labelText: 'Nova Senha',
                         labelStyle: TextStyle(color: labelColor),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _showNewPassword
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                            _showNewPassword ? Icons.visibility : Icons.visibility_off,
                             color: labelColor,
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _showNewPassword = !_showNewPassword;
-                            });
-                          },
+                          onPressed: () => setState(() => _showNewPassword = !_showNewPassword),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -169,19 +157,14 @@ class _PasswordUpdatePageState extends ConsumerState<PasswordUpdatePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Campo Confirmar Senha
+                    // Confirmar senha
                     TextFormField(
                       controller: _confirmPasswordController,
                       obscureText: !_showConfirmPassword,
                       style: TextStyle(color: textColor),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Confirme sua senha';
-                        }
-                        if (value != _newPasswordController.text) {
-                          return 'As senhas não correspondem';
-                        }
+                        if (value == null || value.isEmpty) return 'Confirme sua senha';
+                        if (value != _newPasswordController.text) return 'As senhas não correspondem';
                         return null;
                       },
                       decoration: InputDecoration(
@@ -189,16 +172,10 @@ class _PasswordUpdatePageState extends ConsumerState<PasswordUpdatePage> {
                         labelStyle: TextStyle(color: labelColor),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _showConfirmPassword
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                            _showConfirmPassword ? Icons.visibility : Icons.visibility_off,
                             color: labelColor,
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _showConfirmPassword = !_showConfirmPassword;
-                            });
-                          },
+                          onPressed: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -215,36 +192,21 @@ class _PasswordUpdatePageState extends ConsumerState<PasswordUpdatePage> {
                       ),
                     ),
                     const SizedBox(height: 32),
-
-                    // Botão Atualizar
                     SizedBox(
                       width: double.infinity,
                       height: 50,
-                      child:
-                          _isLoading
-                              ? const Center(
-                                child: CircularProgressIndicator(
-                                  color: Color(0xFFFFC107),
-                                ),
-                              )
-                              : ElevatedButton(
-                                onPressed: _updatePassword,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFD4AF37),
-                                  foregroundColor: const Color(0xFF121E30),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16.0,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  textStyle: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                child: const Text('ATUALIZAR SENHA'),
+                      child: _isLoading
+                          ? const Center(child: CircularProgressIndicator(color: Color(0xFFFFC107)))
+                          : ElevatedButton(
+                              onPressed: _updatePassword,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFD4AF37),
+                                foregroundColor: const Color(0xFF121E30),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                                textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               ),
+                              child: const Text('ATUALIZAR SENHA'),
+                            ),
                     ),
                   ],
                 ),

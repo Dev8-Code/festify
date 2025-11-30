@@ -7,7 +7,6 @@ class AuthRepository {
   AuthRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
   /// Faz login com email e senha
-  /// Retorna a resposta de autenticação do Supabase
   Future<AuthResponse> signIn({
     required String email,
     required String password,
@@ -22,7 +21,7 @@ class AuthRepository {
     }
   }
 
-  /// Faz logout e limpa a sessão
+  /// Faz logout
   Future<void> signOut() async {
     try {
       await _supabase.auth.signOut();
@@ -32,18 +31,16 @@ class AuthRepository {
   }
 
   /// Busca dados do usuário logado na tabela 'usuarios'
-  /// Retorna null se o usuário não estiver autenticado ou não existir na tabela
   Future<Usuario?> getCurrentUser() async {
     try {
       final userId = _supabase.auth.currentUser?.id;
       if (userId == null) return null;
 
-      final response =
-          await _supabase
-              .from('usuarios')
-              .select()
-              .eq('id_usuario', userId)
-              .maybeSingle();
+      final response = await _supabase
+          .from('usuarios')
+          .select()
+          .eq('id_usuario', userId)
+          .maybeSingle();
 
       if (response == null) return null;
 
@@ -56,24 +53,26 @@ class AuthRepository {
   /// Verifica se há uma sessão ativa
   Session? get currentSession => _supabase.auth.currentSession;
 
-  /// Obtém o usuário atualmente autenticado do Auth
+  /// Usuário atualmente autenticado
   User? get currentAuthUser => _supabase.auth.currentUser;
 
   /// Stream de mudanças de autenticação
-  /// Emite eventos quando o usuário faz login, logout ou a sessão expira
-  Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
+  Stream<Session?> get authStateChanges =>
+      _supabase.auth.onAuthStateChange.map((data) => data.session);
 
-  /// Recuperação de senha
-  /// Envia um email de recuperação para o usuário
-  Future<void> resetPassword(String email) async {
+  /// Envia email de recuperação de senha
+  Future<void> resetPassword(String email, {String? redirectTo}) async {
     try {
-      await _supabase.auth.resetPasswordForEmail(email);
+      await _supabase.auth.resetPasswordForEmail(
+        email,
+        redirectTo: redirectTo,
+      );
     } on AuthException {
       rethrow;
     }
   }
 
-  /// Atualiza a senha do usuário atualmente autenticado
+  /// Atualiza senha do usuário logado
   Future<UserResponse> updatePassword(String newPassword) async {
     try {
       return await _supabase.auth.updateUser(
@@ -84,9 +83,25 @@ class AuthRepository {
     }
   }
 
+  /// Atualiza senha usando token de recuperação (Web)
+  Future<void> updatePasswordWithRecoveryToken({
+    required String newPassword,
+    required String recoveryToken,
+  }) async {
+    try {
+      // Recupera sessão temporária usando o token
+      await _supabase.auth.recoverSession(recoveryToken);
+
+      // Atualiza a senha agora que a sessão está ativa
+      await _supabase.auth.updateUser(
+        UserAttributes(password: newPassword),
+      );
+    } on AuthException {
+      rethrow;
+    }
+  }
+
   /// Verifica se o usuário está autenticado
-  /// DEPRECATED: Use auth_notifier.isAuthenticated em vez disso
-  @deprecated
   bool isAuthenticated() {
     return _supabase.auth.currentUser != null &&
         _supabase.auth.currentSession != null;
