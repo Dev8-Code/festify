@@ -71,6 +71,7 @@ class EventService {
       return false;
     }
   }
+  
 }
 
 // Função legada para compatibilidade (caso seja usada em outros lugares)
@@ -103,3 +104,4 @@ DateTime _formataData(String data) {
   final partes = data.split('/');
   return DateTime.parse('${partes[2]}-${partes[1]}-${partes[0]}');
 }
+

@@ -11,3 +11,5 @@ final isLoadingCadastroEventoProvider = StateProvider<bool>((ref) => false);
 final tipoEventoProvider = StateProvider<String>((ref) => '');
 final idClienteSelecionadoProvider = StateProvider<int>((ref) => 0);
 final idEventoCriadoProvider = StateProvider<int>((ref) => 0);
+
+
